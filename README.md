@@ -297,6 +297,7 @@ Padrão da empresa: **`pnpm commit`**.
 
 ```text
 .
+├── .devcontainer/devcontainer.json  # config do ambiente (altere aqui)
 ├── package.json                 # scripts e lint-staged
 ├── scripts/commit.mjs           # pnpm commit
 ├── commitlint.config.js         # regras da mensagem
@@ -305,6 +306,8 @@ Padrão da empresa: **`pnpm commit`**.
 ├── docs/                        # PDFs, ENTENDIMENTO.md, devcontainer-decisoes.md
 └── README.md                    # este arquivo
 ```
+
+Guia de manutenção do DevContainer: [`docs/devcontainer-decisoes.md`](docs/devcontainer-decisoes.md#onde-alterar-configurações-do-devcontainer) (seção _Onde alterar configurações_).
 
 ---
 
