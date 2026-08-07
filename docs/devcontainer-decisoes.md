@@ -64,18 +64,16 @@ Referência complementar: [`ENTENDIMENTO.md`](./ENTENDIMENTO.md) (dependências 
 
 ### 4. Comando de inicialização (`postCreateCommand`)
 
-| Decisão           | Valor                                                                                                                                              |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Comando**       | `corepack enable pnpm && pnpm install`                                                                                                             |
-| **Justificativa** | `corepack enable pnpm` garante pnpm disponível na imagem base; `pnpm install` instala dependências e executa o script `prepare` (configura Husky). |
+| Decisão           | Valor                                                                                                                                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Comando**       | `pnpm install`                                                                                                                                                                                      |
+| **Justificativa** | A imagem `javascript-node:22` já inclui pnpm; `corepack enable` falha com usuário `node` (EACCES em `/usr/local/bin`). O `pnpm install` instala dependências e executa `prepare` (configura Husky). |
 
 **Comportamento esperado após abrir o container:**
 
 1. Dependências npm instaladas (`node_modules/`).
 2. Hooks Husky configurados (`.husky/`).
 3. Desenvolvedor pode rodar `pnpm commit`, `pnpm lint`, `pnpm typecheck`.
-
-**Nota:** na implementação, validar se `corepack` já está habilitado na imagem; se sim, simplificar para apenas `pnpm install`.
 
 ---
 
@@ -149,7 +147,7 @@ Extensões recomendadas em `devcontainer.json` (campo `customizations.vscode.ext
 | Imagem base       | `mcr.microsoft.com/devcontainers/javascript-node:22` |
 | Node.js           | 22 LTS                                               |
 | Usuário           | `node`                                               |
-| postCreateCommand | `corepack enable pnpm && pnpm install`               |
+| postCreateCommand | `pnpm install`                                       |
 | Extensões         | ESLint, Prettier, EditorConfig                       |
 | Portas            | Nenhuma (v1)                                         |
 | GitHub CLI        | Opcional (DevOps)                                    |
@@ -166,7 +164,7 @@ Sempre que precisar mudar o ambiente de desenvolvimento (imagem, extensões, por
 | ----------------------------------- | ---------------------------------- | --------------------------------------------------------------- |
 | Versão do Node / imagem base        | `"image"`                          | Dockerfile customizado → `.devcontainer/Dockerfile` + `"build"` |
 | Usuário dentro do container         | `"remoteUser"`                     | —                                                               |
-| Instalar deps ao criar o container  | `"postCreateCommand"`              | Ex.: `corepack enable pnpm && pnpm install`                     |
+| Instalar deps ao criar o container  | `"postCreateCommand"`              | Ex.: `pnpm install`                                             |
 | Comando ao cada start               | `"postStartCommand"`               | —                                                               |
 | Extensões do Cursor/VS Code         | `customizations.vscode.extensions` | —                                                               |
 | Configurações do editor             | `customizations.vscode.settings`   | —                                                               |

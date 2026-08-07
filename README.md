@@ -29,38 +29,11 @@ Decisões técnicas e manutenção futura: [`docs/devcontainer-decisoes.md`](doc
 
 ### Requisitos
 
-| Requisito | Documentar o processo de utilização do DevContainer.
-
-Objetivo:
-Permitir que novos desenvolvedores configurem o ambiente apenas seguindo a documentação.
-
-Escopo:
-
-Atualizar README.
-
-Documentar uso no VS Code.
-
-Documentar uso no Cursor.
-
-Documentar requisitos.
-
-Critérios de aceite:
-
-README atualizado.
-
-Passo a passo validado.
-
-Documentação versionada.
-
-Fora do escopo:
-
-Alterações na implementação.
-
-Observação |
+| Requisito                   | Observação                                                      |
 | --------------------------- | --------------------------------------------------------------- |
-| **Docker** | Instalado e **em execução** (Docker Desktop ou engine no Linux) |
-| **Extensão Dev Containers** | No Cursor ou VS Code (`ms-vscode-remote.remote-containers`) |
-| **Git** | Para clone, branches e commits |
+| **Docker**                  | Instalado e **em execução** (Docker Desktop ou engine no Linux) |
+| **Extensão Dev Containers** | No Cursor ou VS Code (`ms-vscode-remote.remote-containers`)     |
+| **Git**                     | Para clone, branches e commits                                  |
 
 > **Alternativa:** desenvolvimento local sem container — veja [Começar rápido (local)](#começar-rápido-local) abaixo (exige Node.js, pnpm e Git na máquina).
 
@@ -68,7 +41,7 @@ Observação |
 
 1. Cursor/VS Code lê `.devcontainer/devcontainer.json`.
 2. Baixa a imagem `mcr.microsoft.com/devcontainers/javascript-node:22`.
-3. Executa automaticamente: `corepack enable pnpm && pnpm install`.
+3. Executa automaticamente: `pnpm install` (pnpm já vem na imagem Microsoft Node 22).
 4. O script `prepare` do projeto configura o **Husky** (hooks Git).
 5. Ambiente pronto para `pnpm commit`, `pnpm lint` e `pnpm typecheck`.
 
@@ -128,13 +101,13 @@ pnpm typecheck
 
 ### Dev Container — troubleshooting
 
-| Problema                    | O que fazer                                                                           |
-| --------------------------- | ------------------------------------------------------------------------------------- |
-| Container não inicia        | Verifique se o **Docker está rodando**                                                |
-| `postCreateCommand` falhou  | Abra o log do Dev Container; rode manualmente: `corepack enable pnpm && pnpm install` |
-| Dependências desatualizadas | No terminal do container: `pnpm install`                                              |
-| Ambiente inconsistente      | `Dev Containers: Rebuild Container`                                                   |
-| Quero voltar ao host        | `Dev Containers: Reopen Folder Locally`                                               |
+| Problema                    | O que fazer                                                   |
+| --------------------------- | ------------------------------------------------------------- |
+| Container não inicia        | Verifique se o **Docker está rodando**                        |
+| `postCreateCommand` falhou  | Abra o log do Dev Container; rode manualmente: `pnpm install` |
+| Dependências desatualizadas | No terminal do container: `pnpm install`                      |
+| Ambiente inconsistente      | `Dev Containers: Rebuild Container`                           |
+| Quero voltar ao host        | `Dev Containers: Reopen Folder Locally`                       |
 
 ---
 
@@ -442,4 +415,4 @@ Depois:
 2. Crie a branch `tipo/CHAVE-descricao`.
 3. Altere o código → `git add` → `pnpm commit`.
 4. Push → abra o PR com a chave no título.
-5. Confira o CI e o painel Development da issue no Jira.
+5. Confira o CI e o painel Development da issue no Jira TESTE APAGAR.
