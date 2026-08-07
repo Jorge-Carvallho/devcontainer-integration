@@ -415,4 +415,4 @@ Depois:
 2. Crie a branch `tipo/CHAVE-descricao`.
 3. Altere o código → `git add` → `pnpm commit`.
 4. Push → abra o PR com a chave no título.
-5. Confira o CI e o painel Development da issue no Jira.
+5. Confira o CI e o painel Development da issue no Jira TESTE APAGAR.
