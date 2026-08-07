@@ -21,7 +21,124 @@ Explicação das ferramentas:
 
 ---
 
-## Começar rápido
+## Dev Container (recomendado)
+
+Ambiente padronizado via Docker — **Node 22**, **pnpm**, **Husky** e dependências configurados automaticamente. Ideal para novos desenvolvedores.
+
+Decisões técnicas e manutenção futura: [`docs/devcontainer-decisoes.md`](docs/devcontainer-decisoes.md).
+
+### Requisitos
+
+| Requisito | Documentar o processo de utilização do DevContainer.
+
+Objetivo:
+Permitir que novos desenvolvedores configurem o ambiente apenas seguindo a documentação.
+
+Escopo:
+
+Atualizar README.
+
+Documentar uso no VS Code.
+
+Documentar uso no Cursor.
+
+Documentar requisitos.
+
+Critérios de aceite:
+
+README atualizado.
+
+Passo a passo validado.
+
+Documentação versionada.
+
+Fora do escopo:
+
+Alterações na implementação.
+
+Observação |
+| --------------------------- | --------------------------------------------------------------- |
+| **Docker** | Instalado e **em execução** (Docker Desktop ou engine no Linux) |
+| **Extensão Dev Containers** | No Cursor ou VS Code (`ms-vscode-remote.remote-containers`) |
+| **Git** | Para clone, branches e commits |
+
+> **Alternativa:** desenvolvimento local sem container — veja [Começar rápido (local)](#começar-rápido-local) abaixo (exige Node.js, pnpm e Git na máquina).
+
+### O que acontece ao abrir o container
+
+1. Cursor/VS Code lê `.devcontainer/devcontainer.json`.
+2. Baixa a imagem `mcr.microsoft.com/devcontainers/javascript-node:22`.
+3. Executa automaticamente: `corepack enable pnpm && pnpm install`.
+4. O script `prepare` do projeto configura o **Husky** (hooks Git).
+5. Ambiente pronto para `pnpm commit`, `pnpm lint` e `pnpm typecheck`.
+
+A **primeira abertura** pode demorar (download da imagem). Nas seguintes, costuma ser mais rápido.
+
+No rodapé do editor deve aparecer: **Dev Container: devcontainer-integration**.
+
+---
+
+### Cursor — passo a passo
+
+1. Clone o repositório:
+
+```bash
+git clone <url-do-repo>
+cd devcontainer-integration
+```
+
+2. Abra a pasta no **Cursor**.
+3. Quando aparecer o aviso, clique em **Reopen in Container**.
+
+   Ou use a paleta de comandos (`Ctrl+Shift+P` / `Cmd+Shift+P`):
+
+   ```text
+   Dev Containers: Reopen in Container
+   ```
+
+4. Aguarde o build do container e o fim do `postCreateCommand` (instalação das dependências).
+5. Valide no terminal integrado:
+
+```bash
+node --version    # v22.x
+pnpm --version
+pnpm typecheck
+```
+
+6. Siga o fluxo normal: issue no Jira → branch → `git add` → `pnpm commit` → PR.
+
+---
+
+### VS Code — passo a passo
+
+1. Clone o repositório (mesmos comandos acima).
+2. Abra a pasta no **VS Code**.
+3. Instale a extensão **Dev Containers** (Microsoft), se ainda não tiver.
+4. Paleta de comandos (`F1` ou `Ctrl+Shift+P`):
+
+   ```text
+   Dev Containers: Reopen in Container
+   ```
+
+5. Aguarde o container subir e o `postCreateCommand` terminar.
+6. Valide com `node --version`, `pnpm --version` e `pnpm typecheck`.
+7. Trabalhe com `pnpm commit` conforme o fluxo Jira/Git do projeto.
+
+---
+
+### Dev Container — troubleshooting
+
+| Problema                    | O que fazer                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------- |
+| Container não inicia        | Verifique se o **Docker está rodando**                                                |
+| `postCreateCommand` falhou  | Abra o log do Dev Container; rode manualmente: `corepack enable pnpm && pnpm install` |
+| Dependências desatualizadas | No terminal do container: `pnpm install`                                              |
+| Ambiente inconsistente      | `Dev Containers: Rebuild Container`                                                   |
+| Quero voltar ao host        | `Dev Containers: Reopen Folder Locally`                                               |
+
+---
+
+## Começar rápido (local)
 
 ```bash
 git clone <url-do-repo>
@@ -29,7 +146,9 @@ cd devcontainer-integration
 pnpm install
 ```
 
-Requisitos: **Node.js**, **pnpm** e **Git**.
+Requisitos na **sua máquina** (sem Docker): **Node.js 22**, **pnpm** e **Git**.
+
+> Preferível usar o [Dev Container](#dev-container-recomendado) para ambiente igual ao do time.
 
 Comandos úteis:
 
@@ -313,7 +432,9 @@ Guia de manutenção do DevContainer: [`docs/devcontainer-decisoes.md`](docs/dev
 
 ## Resumo para o dia a dia
 
-**Repositório novo?** Siga [Primeiro envio para a `main` (bootstrap)](#primeiro-envio-para-a-main-bootstrap) uma única vez.
+**Novo no projeto?** Use o [Dev Container](#dev-container-recomendado) (Cursor ou VS Code).
+
+**Repositório novo (bootstrap)?** Siga [Primeiro envio para a `main` (bootstrap)](#primeiro-envio-para-a-main-bootstrap) uma única vez.
 
 Depois:
 
