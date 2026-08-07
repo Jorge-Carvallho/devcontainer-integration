@@ -156,6 +156,37 @@ Extensões recomendadas em `devcontainer.json` (campo `customizations.vscode.ext
 
 ---
 
+## Onde alterar configurações do DevContainer
+
+**Arquivo principal:** [`.devcontainer/devcontainer.json`](../.devcontainer/devcontainer.json)
+
+Sempre que precisar mudar o ambiente de desenvolvimento (imagem, extensões, portas, comandos de setup, etc.), **comece por este arquivo**. Ele é a fonte da verdade da implementação; este documento (`devcontainer-decisoes.md`) registra o **porquê** das decisões.
+
+| O que mudar                         | Onde no `devcontainer.json`        | Quando usar outro arquivo                                       |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------------------------- |
+| Versão do Node / imagem base        | `"image"`                          | Dockerfile customizado → `.devcontainer/Dockerfile` + `"build"` |
+| Usuário dentro do container         | `"remoteUser"`                     | —                                                               |
+| Instalar deps ao criar o container  | `"postCreateCommand"`              | Ex.: `corepack enable pnpm && pnpm install`                     |
+| Comando ao cada start               | `"postStartCommand"`               | —                                                               |
+| Extensões do Cursor/VS Code         | `customizations.vscode.extensions` | —                                                               |
+| Configurações do editor             | `customizations.vscode.settings`   | —                                                               |
+| Expor porta (app web, API)          | `"forwardPorts"`                   | —                                                               |
+| Ferramentas extras (pnpm, gh, etc.) | `"features"`                       | [Dev Container Features](https://containers.dev/features)       |
+| Variáveis de ambiente               | `"containerEnv"`                   | —                                                               |
+| Vários serviços (app + banco)       | `"dockerComposeFile"`              | `.devcontainer/docker-compose.yml`                              |
+
+### Fluxo recomendado para mudanças
+
+1. **Issue no Jira** com a chave (ex.: `DCI-XX`).
+2. **Atualizar** `docs/devcontainer-decisoes.md` se a mudança for decisão arquitetural relevante.
+3. **Implementar** em `.devcontainer/devcontainer.json` (ou Dockerfile/compose, se necessário).
+4. **Testar** com **Reopen in Container** no Cursor/VS Code.
+5. **Commit** com `pnpm commit` → PR para `main`.
+
+> Enquanto usarmos a **imagem oficial Microsoft** sem Dockerfile, quase toda alteração fica no `devcontainer.json`.
+
+---
+
 ## Fora do escopo desta entrega (DCI-2)
 
 - Criar pasta `.devcontainer/`
@@ -195,7 +226,7 @@ Após aprovação deste documento, criar story de implementação para:
 
 1. `.devcontainer/devcontainer.json` conforme decisões acima.
 2. Testar **Reopen in Container** no Cursor/VS Code.
-3. Validar `pnpm commit`, lint e typecheck dentro do container TESTE APAGAR DEPOI S.
+3. Validar `pnpm commit`, lint e typecheck dentro do container.
 
 ---
 
