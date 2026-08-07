@@ -17,6 +17,7 @@ Specs oficiais (PDFs):
 Explicação das ferramentas:
 
 - [`docs/ENTENDIMENTO.md`](docs/ENTENDIMENTO.md)
+- [`docs/devcontainer-decisoes.md`](docs/devcontainer-decisoes.md) — decisões técnicas do DevContainer (DCI-2)
 
 ---
 
@@ -40,6 +41,34 @@ Comandos úteis:
 | `pnpm format`    | Prettier no projeto                        |
 
 **Não use** `git commit -m "..."` no dia a dia. Use `pnpm commit`.
+
+---
+
+## Primeiro envio para a `main` (bootstrap)
+
+Repositório **novo**, ainda **sem commits no GitHub**: o primeiro push é uma exceção.
+
+Nesse momento ainda não existe issue no Jira nem branch de trabalho. Os hooks (Husky + commitlint) exigem chave Jira na mensagem — mas a base do repo (configs, Husky, CI) precisa subir **antes** desse fluxo existir. Por isso o **primeiro commit na `main`** usa `--no-verify` **somente neste caso**.
+
+```bash
+git add .
+git commit -m "chore(setup): bootstrap inicial do repositório" --no-verify
+git push -u origin main
+```
+
+Depois que a `main` estiver no GitHub:
+
+1. Crie a issue no Jira (ex.: `DCI-2`).
+2. Crie a branch **pelo Jira** (painel **Development** → **Criar branch**) ou localmente a partir da `main` atualizada.
+3. A partir daí, use **`pnpm commit`** — não `git commit -m` — e abra PR para `main`.
+
+```text
+Primeiro envio (só uma vez)          Fluxo normal (daí em diante)
+─────────────────────────          ─────────────────────────────
+main + --no-verify + push    →     Jira → branch → pnpm commit → PR
+```
+
+> **Não** use `--no-verify` em commits de tarefa. É exceção exclusiva do bootstrap inicial.
 
 ---
 
@@ -246,6 +275,17 @@ Verifique:
 3. App **GitHub for Jira** está instalado e o repositório conectado.
 4. Aguarde alguns minutos para sincronizar.
 
+### Primeiro commit / push rejeitado (repo novo)
+
+O commitlint bloqueia mensagens sem chave Jira — inclusive o bootstrap que **instala** os próprios hooks.
+
+Se ainda **não há commits no GitHub**, use a exceção documentada em [Primeiro envio para a `main` (bootstrap)](#primeiro-envio-para-a-main-bootstrap):
+
+```bash
+git commit -m "chore(setup): bootstrap inicial do repositório" --no-verify
+git push -u origin main
+```
+
 ### `git commit` direto vs `pnpm commit`
 
 `git commit -m` ainda passa pelos hooks Husky, mas **não** monta a mensagem guiada nem roda typecheck do script.  
@@ -262,13 +302,17 @@ Padrão da empresa: **`pnpm commit`**.
 ├── commitlint.config.js         # regras da mensagem
 ├── .husky/                      # hooks locais
 ├── .github/workflows/           # CI
-├── docs/                        # PDFs + ENTENDIMENTO.md
+├── docs/                        # PDFs, ENTENDIMENTO.md, devcontainer-decisoes.md
 └── README.md                    # este arquivo
 ```
 
 ---
 
 ## Resumo para o dia a dia
+
+**Repositório novo?** Siga [Primeiro envio para a `main` (bootstrap)](#primeiro-envio-para-a-main-bootstrap) uma única vez.
+
+Depois:
 
 1. Crie a issue no Jira e anote a chave.
 2. Crie a branch `tipo/CHAVE-descricao`.

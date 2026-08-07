@@ -254,6 +254,8 @@ Usar esta lista ao escrever a documentação oficial e ao montar o DevContainer.
 
 ## Notas para o DevContainer (futuro)
 
+Decisões técnicas detalhadas: [`devcontainer-decisoes.md`](./devcontainer-decisoes.md) (DCI-2).
+
 - Incluir Node + pnpm + Git no container.
 - Incluir `gh` se o ambiente DevOps for aplicar proteção de branch de dentro do container.
 - Documentar `gh auth login` (token/escopos: `repo`, `admin:repo_hook`, `workflow`).
