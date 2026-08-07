@@ -31,11 +31,11 @@ Referência complementar: [`ENTENDIMENTO.md`](./ENTENDIMENTO.md) (dependências 
 
 ### 1. Imagem base
 
-| Decisão           | Valor                                                                                                                                                    |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Imagem**        | `mcr.microsoft.com/devcontainers/javascript-node:22`                                                                                                     |
-| **Fornecedor**    | Microsoft (imagem oficial Dev Containers)                                                                                                                |
-| **Justificativa** | Imagem mantida pela Microsoft, otimizada para Node.js, compatível com VS Code/Cursor Dev Containers e alinhada ao ecossistema JavaScript do repositório. |
+| Decisão           | Valor                                                                                                                                                     |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Imagem**        | `mcr.microsoft.com/devcontainers/javascript-node:22`                                                                                                      |
+| **Fornecedor**    | Microsoft (imagem oficial Dev Containers)                                                                                                                 |
+| **Justificativa** | Imagem mantida pela Microsoft, otimizada para Node.js, compatível com VS Code/Cursor Dev Containers e alinhada ao ecossistema JavaScript do repositório.. |
 
 **Alternativas descartadas:**
 
@@ -195,7 +195,7 @@ Após aprovação deste documento, criar story de implementação para:
 
 1. `.devcontainer/devcontainer.json` conforme decisões acima.
 2. Testar **Reopen in Container** no Cursor/VS Code.
-3. Validar `pnpm commit`, lint e typecheck dentro do container.
+3. Validar `pnpm commit`, lint e typecheck dentro do container TESTE APAGAR DEPOI S.
 
 ---
 
