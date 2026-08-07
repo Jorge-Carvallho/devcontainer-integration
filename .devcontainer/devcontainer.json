@@ -2,7 +2,7 @@
   "name": "devcontainer-integration",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   "remoteUser": "node",
-  "postCreateCommand": "corepack enable pnpm && pnpm install",
+  "postCreateCommand": "pnpm install",
   "customizations": {
     "vscode": {
       "extensions": [
