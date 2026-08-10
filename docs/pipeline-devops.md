@@ -1,4 +1,12 @@
-# Entendimento das Ferramentas do Pipeline DevOps
+# Pipeline DevOps — Como funciona a automação
+
+Este documento explica **o que acontece por baixo** quando o desenvolvedor trabalha: hooks Git, validação de commits, lint e CI.
+
+**Para o fluxo do dia a dia:** use o [`README.md`](../README.md).
+
+**Ambiente de desenvolvimento:** [`devcontainer.md`](./devcontainer.md).
+
+---
 
 ## Por que a aplicação foi desenvolvida em JavaScript (Node.js)?
 
@@ -10,7 +18,7 @@ Se fosse utilizado Python, seria preciso que todos os desenvolvedores também ti
 
 ---
 
-# Husky
+## Husky
 
 O **Husky** é uma biblioteca do **Node.js** que integra os **Git Hooks** ao projeto.
 
@@ -45,7 +53,7 @@ Em outras palavras, o Husky funciona como um "porteiro": quando ocorre um evento
 
 ---
 
-# Commitlint
+## Commitlint
 
 O **Commitlint** é responsável por validar a mensagem do commit.
 
@@ -69,7 +77,7 @@ Commit aprovado ou rejeitado
 
 ---
 
-# package.json
+## package.json
 
 O **package.json** é o painel de controle do projeto.
 
@@ -92,7 +100,7 @@ Quando um comando como `pnpm commit` é executado, é o `package.json` que infor
 
 ---
 
-# commit.mjs
+## commit.mjs
 
 O **commit.mjs** é um script personalizado desenvolvido pela empresa.
 
@@ -107,7 +115,7 @@ Diferente do Husky e do Commitlint, esse arquivo é totalmente customizável e p
 
 ---
 
-# Lint-Staged
+## Lint-Staged
 
 O **Lint-Staged** executa verificações **somente nos arquivos que foram modificados**.
 
@@ -126,33 +134,21 @@ O Lint-Staged executará as verificações apenas nesses arquivos.
 
 Isso torna o processo muito mais rápido durante o desenvolvimento.
 
-É importante destacar que essa é apenas uma validação inicial. Futuramente, no pipeline de integração contínua (CI), serão executadas verificações mais completas, como build, testes e outras ferramentas que ainda serão desenvolvidas e integradas ao projeto.
+É importante destacar que essa é apenas uma validação inicial. No pipeline de integração contínua (CI), o GitHub Actions repete e complementa as validações no servidor.
 
 ---
 
-# GitHub Actions (.github/workflows/*.yml)
+## GitHub Actions (.github/workflows/*.yml)
 
-Os arquivos **YAML** localizados em:
+Os arquivos **YAML** em `.github/workflows/` são executados **no GitHub** quando ocorre o evento configurado em cada workflow (`pull_request`, `push`, manual etc.).
 
-```text
-.github/workflows/
-```
+Neste repositório, a validação principal ocorre em **Pull Requests para a branch `main`**: título do PR e mensagens dos commits são verificados. Isso garante que as regras sejam aplicadas no servidor, mesmo se alguma validação local tiver sido ignorada (`--no-verify`).
 
-executam a validação novamente após o código ser enviado ao GitHub (`git push`).
-
-Essa etapa garante que as regras sejam verificadas também no servidor, evitando que um commit inválido seja aceito caso alguma validação local tenha sido ignorada.
-
-Além da validação de commits, futuramente esses workflows poderão executar:
-
-- build da aplicação;
-- testes automatizados;
-- análise de qualidade;
-- deploy;
-- outras etapas do pipeline DevOps.
+Em projetos provisionados pela plataforma, workflows adicionais (build, testes, deploy) ficam **no repositório de cada aplicação**, não nesta base.
 
 ---
 
-# Papel de cada ferramenta
+## Papel de cada ferramenta
 
 | Ferramenta                        | Função                                                                            |
 | --------------------------------- | --------------------------------------------------------------------------------- |
@@ -163,77 +159,84 @@ Além da validação de commits, futuramente esses workflows poderão executar:
 | **commitlint.config.js**          | Define as regras que o Commitlint utilizará para validar a mensagem do commit.    |
 | **lint-staged**                   | Executa verificações apenas nos arquivos modificados, tornando o processo rápido. |
 | **.github/workflows/\*.yml**      | Executa novamente as validações no GitHub e faz parte do pipeline de CI.          |
-| **GitHub CLI (`gh`)**             | Dependência externa para `pnpm proteger-branch` (não vem do `package.json`).      |
+| **GitHub CLI (gh)**               | Dependência externa para `pnpm proteger-branch` (não vem do `package.json`).      |
 
 ---
 
-# Fluxo completo
+## Fluxo completo
+
+Fluxo padrão da empresa (`pnpm commit`). O `commit.mjs` **não é chamado pelo Husky** — é o `pnpm commit` que o invoca; depois o script executa `git commit`, e aí entram os hooks.
 
 ```text
 Desenvolvedor escreve código
             │
             ▼
+git add
+            │
+            ▼
+pnpm commit
+            │
+            ▼
+commit.mjs (perguntas, monta mensagem, valida branch Jira)
+            │
+            ▼
+lint-staged (eslint + prettier nos arquivos staged)
+            │
+            ▼
+typecheck (tsc --noEmit)
+            │
+            ▼
 git commit
             │
-            ▼
-Husky detecta o evento
-            │
-            ▼
-Executa .husky/commit-msg
-            │
-            ▼
-Commitlint valida a mensagem
-            │
-            ▼
-Lint-Staged verifica apenas os arquivos alterados
-            │
-            ▼
-commit.mjs executa regras personalizadas
+            ├─ Husky pre-commit  → lint-staged (novamente)
+            └─ Husky commit-msg  → commitlint (+ Jira key)
             │
             ▼
 Commit criado
             │
             ▼
-git push
+git push (opcional; o script pode perguntar)
             │
             ▼
-GitHub Actions (.yml)
+GitHub Actions (Pull Request para main)
             │
             ▼
-Validação completa do pipeline (CI)
+Validação no servidor (CI)
 ```
 
-# Resumo
+---
+
+## Resumo
 
 O pipeline foi desenvolvido utilizando o ecossistema Node.js porque todas as ferramentas necessárias já fazem parte desse ambiente, evitando dependências adicionais.
 
 Cada ferramenta possui uma responsabilidade específica:
 
-- **Husky** intercepta os eventos do Git.
-- **Commitlint** valida a mensagem do commit.
-- **Lint-Staged** verifica apenas os arquivos alterados.
-- **commit.mjs** executa regras personalizadas da empresa.
+- **commit.mjs** (via `pnpm commit`) conduz o fluxo guiado e roda lint-staged/typecheck antes do `git commit`.
+- **Husky** intercepta os eventos do Git quando o `git commit` é executado.
+- **Commitlint** valida a mensagem do commit (hook `commit-msg`).
+- **Lint-Staged** verifica apenas os arquivos alterados (no script e no hook `pre-commit`).
 - **package.json** organiza dependências e comandos.
-- **GitHub Actions** realiza novamente todas as validações no servidor, garantindo que apenas código dentro dos padrões seja aceito.
+- **GitHub Actions** valida novamente no servidor (PR para `main`), garantindo que apenas código dentro dos padrões seja aceito.
 
 ---
 
-# Dependências da base (para documentação e DevContainer)
+## Dependências da base
 
-Usar esta lista ao escrever a documentação oficial e ao montar o DevContainer.
+Lista de referência para documentação e DevContainer. Detalhes do ambiente: [`devcontainer.md`](./devcontainer.md).
 
-## Runtime / ferramentas de sistema
+### Runtime / ferramentas de sistema
 
-| Dependência           | Para quê                                                    | Obrigatória?                                         |
-| --------------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
-| **Node.js** (LTS)     | Rodar scripts (`pnpm commit`, typecheck, etc.)              | Sim                                                  |
-| **pnpm**              | Instalar pacotes e executar scripts do `package.json`       | Sim                                                  |
-| **Git**               | Branch, commit, push                                        | Sim                                                  |
-| **GitHub CLI (`gh`)** | Script `pnpm proteger-branch` (proteção de `main`/`master`) | Só para quem for aplicar proteção de branch (DevOps) |
+| Dependência         | Para quê                                                    | Obrigatória?                                         |
+| ------------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| **Node.js** (LTS)   | Rodar scripts (`pnpm commit`, typecheck, etc.)              | Sim                                                  |
+| **pnpm**            | Instalar pacotes e executar scripts do `package.json`       | Sim                                                  |
+| **Git**             | Branch, commit, push                                        | Sim                                                  |
+| **GitHub CLI (gh)** | Script `pnpm proteger-branch` (proteção de `main`/`master`) | Só para quem for aplicar proteção de branch (DevOps) |
 
 > Atenção: `gh` **não** é dependência npm. Precisa estar instalado no sistema (ou no DevContainer) e autenticado (`gh auth login`).
 
-## Dependências npm (`package.json` / `devDependencies`)
+### Dependências npm (`package.json` / `devDependencies`)
 
 | Pacote                                                | Para quê                                                |
 | ----------------------------------------------------- | ------------------------------------------------------- |
@@ -244,19 +247,10 @@ Usar esta lista ao escrever a documentação oficial e ao montar o DevContainer.
 | `eslint` + `prettier`                                 | Qualidade e formatação                                  |
 | `typescript` + `@types/node`                          | Typecheck (`pnpm typecheck`)                            |
 
-## Comandos da base
+### Comandos da base
 
 | Comando                | Script                                  |
 | ---------------------- | --------------------------------------- |
 | `pnpm commit`          | `scripts/commit.mjs`                    |
 | `pnpm proteger-branch` | `scripts/proteger-branch-principal.mjs` |
 | `pnpm typecheck`       | `tsc --noEmit`                          |
-
-## Notas para o DevContainer (futuro)
-
-Decisões técnicas detalhadas: [`devcontainer-decisoes.md`](./devcontainer-decisoes.md) (DCI-2).
-
-- Incluir Node + pnpm + Git no container.
-- Incluir `gh` se o ambiente DevOps for aplicar proteção de branch de dentro do container.
-- Documentar `gh auth login` (token/escopos: `repo`, `admin:repo_hook`, `workflow`).
-- Branch protection exige plano GitHub adequado (repo público, Pro ou Organization). Repo privado em conta free retorna 403.
