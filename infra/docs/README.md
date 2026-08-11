@@ -2,7 +2,7 @@
 
 Índice para quem precisa **entender ou manter** a base — não é o guia do dia a dia.
 
-**Para usar o projeto:** comece pelo [`README.md`](../README.md) na raiz.
+**Para usar o projeto:** comece pelo [`README.md`](../../README.md) na raiz.
 
 ---
 
@@ -30,5 +30,5 @@ Fonte da verdade em caso de dúvida — prevalecem sobre a documentação Markdo
 Quero trabalhar hoje          → README.md (raiz)
 Quero entender o pipeline     → pipeline-devops.md
 Quero entender o DevContainer → devcontainer.md
-Preciso da spec oficial       → docs/specs/*.pdf
+Preciso da spec oficial       → infra/docs/specs/*.pdf
 ```

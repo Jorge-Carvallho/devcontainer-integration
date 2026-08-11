@@ -9,12 +9,12 @@ alwaysApply: true
 
 - Este repo **� a Engineering Platform** � ver regra `engineering-platform.mdc`.
 - Husky, commitlint, GitHub Actions etc. s�o **capabilities reutiliz�veis** para provisionar qualquer projeto da empresa.
-- PDFs em `docs/specs/` = spec do chefe. **PDF prevalece** em caso de d?vida.
+- PDFs em `infra/docs/specs/` = spec do chefe. **PDF prevalece** em caso de d?vida.
 
 ## Fonte da verdade
 
-1. `docs/specs/integracao-github-jira-validacao-de-commits.pdf`
-2. `docs/specs/pnpm-commit-script-interativo-lint-typecheck.pdf`
+1. `infra/docs/specs/integracao-github-jira-validacao-de-commits.pdf`
+2. `infra/docs/specs/pnpm-commit-script-interativo-lint-typecheck.pdf`
 
 ## Conven��es obrigat�rias
 

@@ -1,0 +1,22 @@
+{
+  "files.exclude": {
+    ".cursor": true,
+    ".devcontainer": true,
+    ".github": true,
+    ".husky": true,
+    ".vscode": true,
+    "infra": false
+  },
+  "search.exclude": {
+    ".cursor/**": true,
+    ".devcontainer/**": true,
+    ".github/**": true,
+    ".husky/**": true,
+    "infra/**": true
+  },
+  "eslint.options": {
+    "overrideConfigFile": "infra/config/eslint.config.js"
+  },
+  "prettier.configPath": "infra/config/prettier.config.json",
+  "prettier.ignorePath": "infra/config/prettierignore"
+}

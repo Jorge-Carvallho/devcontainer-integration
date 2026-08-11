@@ -2,7 +2,7 @@
 
 Este documento explica **o que acontece por baixo** quando o desenvolvedor trabalha: hooks Git, validação de commits, lint e CI.
 
-**Para o fluxo do dia a dia:** use o [`README.md`](../README.md).
+**Para o fluxo do dia a dia:** use o [`README.md`](../../README.md).
 
 **Ambiente de desenvolvimento:** [`devcontainer.md`](./devcontainer.md).
 
@@ -91,7 +91,7 @@ Exemplo:
 
 ```json
 "scripts": {
-  "commit": "node scripts/commit.mjs",
+  "commit": "node infra/scripts/commit.mjs",
   "prepare": "husky"
 }
 ```
@@ -150,16 +150,16 @@ Em projetos provisionados pela plataforma, workflows adicionais (build, testes, 
 
 ## Papel de cada ferramenta
 
-| Ferramenta                        | Função                                                                            |
-| --------------------------------- | --------------------------------------------------------------------------------- |
-| **package.json**                  | Diz quais comandos existem e quais ferramentas o projeto utiliza.                 |
-| **commit.mjs**                    | Executa a lógica personalizada criada pela empresa para o processo de commit.     |
-| **proteger-branch-principal.mjs** | Aplica proteção da branch principal (`main`/`master`) via GitHub CLI (`gh`).      |
-| **.husky/commit-msg**             | Informa ao Git que, durante um commit, uma validação deve ser executada.          |
-| **commitlint.config.js**          | Define as regras que o Commitlint utilizará para validar a mensagem do commit.    |
-| **lint-staged**                   | Executa verificações apenas nos arquivos modificados, tornando o processo rápido. |
-| **.github/workflows/\*.yml**      | Executa novamente as validações no GitHub e faz parte do pipeline de CI.          |
-| **GitHub CLI (gh)**               | Dependência externa para `pnpm proteger-branch` (não vem do `package.json`).      |
+| Ferramenta                            | Função                                                                            |
+| ------------------------------------- | --------------------------------------------------------------------------------- |
+| **package.json**                      | Diz quais comandos existem e quais ferramentas o projeto utiliza.                 |
+| **commit.mjs**                        | Executa a lógica personalizada criada pela empresa para o processo de commit.     |
+| **proteger-branch-principal.mjs**     | Aplica proteção da branch principal (`main`/`master`) via GitHub CLI (`gh`).      |
+| **.husky/commit-msg**                 | Informa ao Git que, durante um commit, uma validação deve ser executada.          |
+| **infra/config/commitlint.config.js** | Define as regras que o Commitlint utilizará para validar a mensagem do commit.    |
+| **lint-staged**                       | Executa verificações apenas nos arquivos modificados, tornando o processo rápido. |
+| **.github/workflows/\*.yml**          | Executa novamente as validações no GitHub e faz parte do pipeline de CI.          |
+| **GitHub CLI (gh)**                   | Dependência externa para `pnpm proteger-branch` (não vem do `package.json`).      |
 
 ---
 
@@ -249,8 +249,8 @@ Lista de referência para documentação e DevContainer. Detalhes do ambiente: [
 
 ### Comandos da base
 
-| Comando                | Script                                  |
-| ---------------------- | --------------------------------------- |
-| `pnpm commit`          | `scripts/commit.mjs`                    |
-| `pnpm proteger-branch` | `scripts/proteger-branch-principal.mjs` |
-| `pnpm typecheck`       | `tsc --noEmit`                          |
+| Comando                | Script                                        |
+| ---------------------- | --------------------------------------------- |
+| `pnpm commit`          | `infra/scripts/commit.mjs`                    |
+| `pnpm proteger-branch` | `infra/scripts/proteger-branch-principal.mjs` |
+| `pnpm typecheck`       | `tsc --noEmit`                                |

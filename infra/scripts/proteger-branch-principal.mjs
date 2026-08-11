@@ -8,7 +8,7 @@
  *
  * Uso:
  *   pnpm proteger-branch
- *   node scripts/proteger-branch-principal.mjs
+ *   node infra/scripts/proteger-branch-principal.mjs
  *
  * Dependencias (documentar na doc oficial / DevContainer):
  *   - Node.js (mesmo runtime da base)

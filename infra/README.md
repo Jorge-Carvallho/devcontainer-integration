@@ -4,9 +4,9 @@ Guia para **novos desenvolvedores** — como usar a base no dia a dia.
 
 Este repositório é o **template padrão da empresa** para padronizar commits, branches, Jira e validação de qualidade (local + CI).
 
-**Quer entender como funciona por baixo?** → [`docs/README.md`](docs/README.md)
+**Quer entender como funciona por baixo?** → [`infra/docs/README.md`](infra/docs/README.md)
 
-**Specs oficiais (PDF):** [`docs/specs/`](docs/specs/)
+**Specs oficiais (PDF):** [`infra/docs/specs/`](infra/docs/specs/)
 
 ---
 
@@ -67,7 +67,7 @@ No rodapé do editor deve aparecer: **Dev Container: devcontainer-integration**.
 | Ambiente inconsistente      | `Dev Containers: Rebuild Container`                           |
 | Quero voltar ao host        | `Dev Containers: Reopen Folder Locally`                       |
 
-Detalhes do ambiente (imagem, portas, extensões): [`docs/devcontainer.md`](docs/devcontainer.md).
+Detalhes do ambiente (imagem, portas, extensões): [`infra/docs/devcontainer.md`](infra/docs/devcontainer.md).
 
 ---
 
@@ -185,7 +185,7 @@ docs(docs): DCI-3 documentar fluxo tecnico para onboarding
 
 Se marcar **breaking change = Yes**, o script pede o motivo e grava `BREAKING CHANGE:` no corpo do commit.
 
-Como funciona por baixo (Husky, Commitlint, CI): [`docs/pipeline-devops.md`](docs/pipeline-devops.md).
+Como funciona por baixo (Husky, Commitlint, CI): [`infra/docs/pipeline-devops.md`](infra/docs/pipeline-devops.md).
 
 ---
 
@@ -258,4 +258,4 @@ Depois:
 4. Push → abra o PR com a chave no título.
 5. Confira o CI e o painel Development da issue no Jira.
 
-**Documentação técnica:** [`docs/README.md`](docs/README.md)
+**Documentação técnica:** [`infra/docs/README.md`](infra/docs/README.md)

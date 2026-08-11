@@ -225,7 +225,9 @@ function temUpstream() {
  */
 function obterJiraBaseUrl() {
   try {
-    const config = JSON.parse(readFileSync(join(process.cwd(), "config", "jira.json"), "utf8"));
+    const config = JSON.parse(
+      readFileSync(join(process.cwd(), "infra", "config", "jira.json"), "utf8"),
+    );
     const base = config.baseUrl?.trim().replace(/\/+$/, "");
     return base || null;
   } catch {
@@ -299,7 +301,7 @@ function mostrarLinksAposPush(jira, branch) {
   if (urlIssue) {
     console.log(urlIssue);
   } else {
-    console.log(chalk.yellow(`${jira} (sem link — configure config/jira.json)`));
+    console.log(chalk.yellow(`${jira} (sem link — configure infra/config/jira.json)`));
     console.log(chalk.gray('  Exemplo: { "baseUrl": "https://sua-empresa.atlassian.net" }'));
   }
 

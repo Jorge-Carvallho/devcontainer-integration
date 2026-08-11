@@ -2,11 +2,11 @@
 
 Documentação técnica do ambiente de desenvolvimento containerizado.
 
-**Para abrir e usar o container:** [`README.md`](../README.md#dev-container-recomendado).
+**Para abrir e usar o container:** [`README.md`](../../README.md#dev-container-recomendado).
 
 **Pipeline de commits e automação:** [`pipeline-devops.md`](./pipeline-devops.md).
 
-**Arquivo de configuração:** [`.devcontainer/devcontainer.json`](../.devcontainer/devcontainer.json).
+**Arquivo de configuração:** [`.devcontainer/devcontainer.json`](../../.devcontainer/devcontainer.json).
 
 ---
 
@@ -94,11 +94,11 @@ O projeto é uma **plataforma de engenharia** (scripts, Husky, commitlint, CI) �
 
 Extensões em `devcontainer.json` (`customizations.vscode.extensions`):
 
-| Extensão     | ID                          | Motivo                                     |
-| ------------ | --------------------------- | ------------------------------------------ |
-| ESLint       | `dbaeumer.vscode-eslint`    | Alinhado ao `pnpm lint` e lint-staged      |
-| Prettier     | `esbenp.prettier-vscode`    | Formatação consistente com `.prettierrc`   |
-| EditorConfig | `editorconfig.editorconfig` | Respeitar convenções de indentação/arquivo |
+| Extensão     | ID                          | Motivo                                                         |
+| ------------ | --------------------------- | -------------------------------------------------------------- |
+| ESLint       | `dbaeumer.vscode-eslint`    | Alinhado ao `pnpm lint` e lint-staged                          |
+| Prettier     | `esbenp.prettier-vscode`    | Formatação consistente com `infra/config/prettier.config.json` |
+| EditorConfig | `editorconfig.editorconfig` | Respeitar convenções de indentação/arquivo                     |
 
 **Configurações do editor** (em `devcontainer.json`):
 
@@ -121,7 +121,7 @@ Extensões em `devcontainer.json` (`customizations.vscode.extensions`):
 | **Portas expostas** | `3001` (frontend), `5143` (backend), `5432` (PostgreSQL)                                                                                                                                                                                                               |
 | **Justificativa**   | Padrão reutilizável para projetos futuros provisionados pela Engineering Platform. Neste repositório (scripts CLI) nenhum serviço escuta essas portas por padrão — o encaminhamento é inofensivo e evita reconfiguração quando o projeto ganhar app web, API ou banco. |
 
-Configuração em [`.devcontainer/devcontainer.json`](../.devcontainer/devcontainer.json):
+Configuração em [`.devcontainer/devcontainer.json`](../../.devcontainer/devcontainer.json).
 
 ```json
 "forwardPorts": [3001, 5143, 5432],
@@ -178,7 +178,7 @@ Sempre que precisar mudar o ambiente de desenvolvimento (imagem, extensões, por
 ### Fluxo recomendado para mudanças
 
 1. **Issue no Jira** com a chave (ex.: `DCI-XX`).
-2. **Atualizar** `docs/devcontainer.md` se a mudança for decisão arquitetural relevante.
+2. **Atualizar** `infra/docs/devcontainer.md` se a mudança for decisão arquitetural relevante.
 3. **Implementar** em `.devcontainer/devcontainer.json` (ou Dockerfile/compose, se necessário).
 4. **Testar** com **Reopen in Container** no Cursor/VS Code.
 5. **Commit** com `pnpm commit` → PR para `main`.

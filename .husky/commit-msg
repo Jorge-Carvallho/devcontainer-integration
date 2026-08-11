@@ -1,1 +1,7 @@
-npx --no -- commitlint --edit "$1"
+repo_root="$(git rev-parse --show-toplevel)"
+case "$1" in
+  /*) commit_msg_file="$1" ;;
+  *) commit_msg_file="$repo_root/$1" ;;
+esac
+
+pnpm --dir "$repo_root/infra" exec commitlint --config "$repo_root/infra/config/commitlint.config.js" --edit "$commit_msg_file"
