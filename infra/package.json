@@ -14,11 +14,11 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs}": [
-      "eslint --config config/eslint.config.js --fix",
-      "prettier --config config/prettier.config.json --ignore-path config/prettierignore --write"
+      "infra/node_modules/.bin/eslint --config infra/config/eslint.config.js --fix",
+      "infra/node_modules/.bin/prettier --config infra/config/prettier.config.json --ignore-path infra/config/prettierignore --write"
     ],
     "*.{json,md,yml,yaml}": [
-      "prettier --config config/prettier.config.json --ignore-path config/prettierignore --write"
+      "infra/node_modules/.bin/prettier --config infra/config/prettier.config.json --ignore-path infra/config/prettierignore --write"
     ]
   },
   "devDependencies": {

@@ -1,18 +1,16 @@
 {
+  // Liga/desliga TODA a infra no Explorer (uma chave só):
+  //   true  = oculta infra (DEV padrão — README, .vscode, src/, app/…)
+  //   false = mostra tudo
+  // Depois: Ctrl+Shift+P → Developer: Reload Window
   "files.exclude": {
-    ".cursor": true,
-    ".devcontainer": true,
-    ".github": true,
-    ".husky": true,
-    ".vscode": true,
-    "infra": false
+    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/.gitignore,**/infra,**/.pnpm-store,package.json,pnpm-lock.yaml,devcontainer-integration.infra.code-workspace}": true,
+    "**/node_modules": true
   },
   "search.exclude": {
-    ".cursor/**": true,
-    ".devcontainer/**": true,
-    ".github/**": true,
-    ".husky/**": true,
-    "infra/**": true
+    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/infra,**/.pnpm-store}/**": true,
+    "**/.gitignore": true,
+    "**/node_modules/**": true
   },
   "eslint.options": {
     "overrideConfigFile": "infra/config/eslint.config.js"

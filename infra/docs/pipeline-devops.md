@@ -2,7 +2,7 @@
 
 Este documento explica **o que acontece por baixo** quando o desenvolvedor trabalha: hooks Git, validação de commits, lint e CI.
 
-**Para o fluxo do dia a dia:** use o [`README.md`](../../README.md).
+**Para o fluxo do dia a dia:** use o [`readme-commit.md`](../../readme-commit.md).
 
 **Ambiente de desenvolvimento:** [`devcontainer.md`](./devcontainer.md).
 

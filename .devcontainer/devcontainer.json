@@ -2,8 +2,7 @@
   "name": "devcontainer-integration",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   "remoteUser": "node",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/app",
-  "postCreateCommand": "pnpm --dir ../infra install --frozen-lockfile",
+  "postCreateCommand": "pnpm --dir infra install --frozen-lockfile",
   "forwardPorts": [3001, 5143, 5432],
   "portsAttributes": {
     "3001": {
@@ -31,7 +30,12 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": "explicit"
-        }
+        },
+        "eslint.options": {
+          "overrideConfigFile": "infra/config/eslint.config.js"
+        },
+        "prettier.configPath": "infra/config/prettier.config.json",
+        "prettier.ignorePath": "infra/config/prettierignore"
       }
     }
   }

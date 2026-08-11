@@ -2,7 +2,7 @@
 
 Documentação técnica do ambiente de desenvolvimento containerizado.
 
-**Para abrir e usar o container:** [`README.md`](../../README.md#dev-container-recomendado).
+**Para commitar no dia a dia:** [`readme-commit.md`](../../readme-commit.md).
 
 **Pipeline de commits e automação:** [`pipeline-devops.md`](./pipeline-devops.md).
 
@@ -55,10 +55,10 @@ O projeto é uma **plataforma de engenharia** (scripts, Husky, commitlint, CI) �
 
 ## Comando de inicialização (`postCreateCommand`)
 
-| Item              | Valor                                                                                                                                                                                               |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Comando**       | `pnpm install`                                                                                                                                                                                      |
-| **Justificativa** | A imagem `javascript-node:22` já inclui pnpm; `corepack enable` falha com usuário `node` (EACCES em `/usr/local/bin`). O `pnpm install` instala dependências e executa `prepare` (configura Husky). |
+| Item              | Valor                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| **Comando**       | `pnpm --dir infra install --frozen-lockfile` (só na criação do container)               |
+| **Justificativa** | Roda **uma vez** ao abrir o Dev Container; o dev não precisa rodar install manualmente. |
 
 **Comportamento esperado após abrir o container:**
 

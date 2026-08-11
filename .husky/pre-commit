@@ -1,2 +1,2 @@
 repo_root="$(git rev-parse --show-toplevel)"
-pnpm --dir "$repo_root/infra" exec lint-staged
+pnpm --dir "$repo_root/infra" exec lint-staged --cwd "$repo_root"

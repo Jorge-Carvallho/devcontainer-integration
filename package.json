@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "setup": "pnpm --dir infra install --frozen-lockfile",
+    "commit": "pnpm --dir infra commit",
+    "lint": "pnpm --dir infra lint",
+    "typecheck": "pnpm --dir infra typecheck",
+    "format": "pnpm --dir infra format",
+    "pr": "pnpm --dir infra pr",
+    "proteger-branch": "pnpm --dir infra proteger-branch"
+  }
+}

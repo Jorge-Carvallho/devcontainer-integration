@@ -10,5 +10,5 @@
     "checkJs": true,
     "types": ["node"]
   },
-  "include": ["../scripts/**/*"]
+  "include": ["../scripts/**/*", "../../src/**/*"]
 }

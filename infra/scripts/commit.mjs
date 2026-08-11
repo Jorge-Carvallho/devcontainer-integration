@@ -223,10 +223,17 @@ function temUpstream() {
  * URL base do Jira definida pelo DevOps ao provisionar o projeto.
  * @returns {string | null}
  */
+/**
+ * @returns {string}
+ */
+function obterRepoRoot() {
+  return execFileSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8" }).trim();
+}
+
 function obterJiraBaseUrl() {
   try {
     const config = JSON.parse(
-      readFileSync(join(process.cwd(), "infra", "config", "jira.json"), "utf8"),
+      readFileSync(join(obterRepoRoot(), "infra", "config", "jira.json"), "utf8"),
     );
     const base = config.baseUrl?.trim().replace(/\/+$/, "");
     return base || null;
@@ -509,7 +516,8 @@ async function main() {
   ]);
 
   try {
-    run("pnpm lint-staged", "Rodando lint e formatacao nos arquivos alterados");
+    const repoRoot = obterRepoRoot();
+    run(`pnpm lint-staged --cwd "${repoRoot}"`, "Rodando lint e formatacao nos arquivos alterados");
     run("pnpm typecheck", "Verificando tipos com o TypeScript");
   } catch {
     console.log(
