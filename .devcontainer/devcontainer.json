@@ -3,20 +3,15 @@
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   "remoteUser": "node",
   "postCreateCommand": "pnpm --dir infra install --frozen-lockfile",
-  "forwardPorts": [3001, 5143, 5432],
+  "forwardPorts": [3001],
   "portsAttributes": {
     "3001": {
       "label": "frontend",
       "onAutoForward": "notify"
-    },
-    "5143": {
-      "label": "backend",
-      "onAutoForward": "notify"
-    },
-    "5432": {
-      "label": "postgresql",
-      "onAutoForward": "silent"
     }
+  },
+  "remoteEnv": {
+    "ENV_FILE": ".env"
   },
   "customizations": {
     "vscode": {

@@ -114,31 +114,36 @@ Extensões em `devcontainer.json` (`customizations.vscode.extensions`):
 
 ---
 
-## Política de portas (padrão da plataforma)
+## Política de portas
 
-| Item                | Valor                                                                                                                                                                                                                                                                  |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Portas expostas** | `3001` (frontend), `5143` (backend), `5432` (PostgreSQL)                                                                                                                                                                                                               |
-| **Justificativa**   | Padrão reutilizável para projetos futuros provisionados pela Engineering Platform. Neste repositório (scripts CLI) nenhum serviço escuta essas portas por padrão — o encaminhamento é inofensivo e evita reconfiguração quando o projeto ganhar app web, API ou banco. |
+| Item                               | Valor                                                                |
+| ---------------------------------- | -------------------------------------------------------------------- |
+| **Dev Container (`forwardPorts`)** | Apenas **`3001`** (frontend padrão da plataforma)                    |
+| **Demais portas**                  | Definidas no **`.env` da raiz** (área da aplicação, não em `infra/`) |
 
-Configuração em [`.devcontainer/devcontainer.json`](../../.devcontainer/devcontainer.json).
+O `devcontainer.json` **não lê portas de um `.env` automaticamente** — o encaminhamento fixo no container é só `3001`. Backend, banco etc. usam variáveis do `.env` que a **aplicação** carrega em runtime (ex.: `src/`).
+
+Template na raiz: [`.env.example`](../../.env.example) → copiar para `.env` (gitignored).
 
 ```json
-"forwardPorts": [3001, 5143, 5432],
+"forwardPorts": [3001],
 "portsAttributes": {
-  "3001": { "label": "frontend", "onAutoForward": "notify" },
-  "5143": { "label": "backend", "onAutoForward": "notify" },
-  "5432": { "label": "postgresql", "onAutoForward": "silent" }
+  "3001": { "label": "frontend", "onAutoForward": "notify" }
+},
+"remoteEnv": {
+  "ENV_FILE": ".env"
 }
 ```
 
-| Porta  | Uso padrão              | Ajuste por projeto                          |
-| ------ | ----------------------- | ------------------------------------------- |
-| `3001` | Frontend (React, Next…) | Alterar se o template usar outra porta      |
-| `5143` | Backend (API Node…)     | Alterar se o template usar outra porta      |
-| `5432` | PostgreSQL              | Alterar se o projeto usar MySQL, Mongo etc. |
+| Variável (`.env`) | Uso padrão                                             |
+| ----------------- | ------------------------------------------------------ |
+| `PORT`            | Frontend (default `3001`) — alinhado ao `forwardPorts` |
+| `BACKEND_PORT`    | API / backend (ex.: `5143`)                            |
+| `DATABASE_PORT`   | Banco (ex.: `5432`)                                    |
 
-**Revisão por projeto:** ao provisionar um app cliente, validar se as portas do template batem com `forwardPorts` e `portsAttributes`.
+**Auto-forward:** se a app subir outra porta dentro do container, o Cursor/VS Code pode encaminhar automaticamente quando detectar o processo escutando.
+
+**Provisionamento:** ao criar projeto cliente, DevOps valida `.env.example`, portas da app e se precisa adicionar mais entradas em `forwardPorts`.
 
 ---
 
@@ -151,7 +156,7 @@ Configuração em [`.devcontainer/devcontainer.json`](../../.devcontainer/devcon
 | Usuário           | `node`                                               |
 | postCreateCommand | `pnpm install`                                       |
 | Extensões         | ESLint, Prettier, EditorConfig                       |
-| Portas            | 3001, 5143, 5432 (padrão plataforma)                 |
+| Portas            | `3001` no Dev Container; demais via `.env` na raiz   |
 | GitHub CLI        | Opcional (DevOps)                                    |
 
 ---
