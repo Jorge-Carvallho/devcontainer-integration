@@ -4,7 +4,7 @@
   //   false = mostra tudo
   // Depois: Ctrl+Shift+P → Developer: Reload Window
   "files.exclude": {
-    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/.gitignore,**/infra,**/.pnpm-store,package.json,pnpm-lock.yaml,devcontainer-integration.infra.code-workspace}": true,
+    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/.gitignore,**/infra,**/.pnpm-store,package.json,pnpm-lock.yaml,devcontainer-integration.infra.code-workspace}": false,
     "**/node_modules": true
   },
   "search.exclude": {
