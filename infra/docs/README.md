@@ -100,9 +100,11 @@ Toggle DEV (uma chave em `.vscode/settings.json`): `true` = oculta infra · `fal
 
 ---
 
-## Bootstrap (repo novo)
+## Bootstrap (repo novo) — DevOps
 
-Primeiro commit na `main` sem hooks — **exceção única**:
+Ao provisionar um repositório a partir deste template, o GitHub precisa de uma branch **`main`** com conteúdo. O **DevOps** faz o primeiro push antes dos desenvolvedores usarem o fluxo Jira + `pnpm commit`.
+
+**Obrigatório:** o primeiro commit na `main` deve ser exatamente assim — **exceção única** (sem chave Jira; hooks desligados com `--no-verify`):
 
 ```bash
 git add .
@@ -110,7 +112,7 @@ git commit -m "chore(setup): bootstrap inicial do repositório" --no-verify
 git push -u origin main
 ```
 
-Depois disso: fluxo normal com Jira + `pnpm commit`.
+Depois disso: fluxo normal — issue no Jira, branch `tipo/CHAVE-desc`, `pnpm commit` (sem `--no-verify` no dia a dia).
 
 ---
 

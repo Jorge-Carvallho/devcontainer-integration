@@ -1,12 +1,22 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "setup": "pnpm --dir infra install --frozen-lockfile",
     "commit": "pnpm --dir infra commit",
-    "lint": "pnpm --dir infra lint",
+    "lint": "infra/node_modules/.bin/eslint --config eslint.config.js src infra/scripts infra/config",
     "typecheck": "pnpm --dir infra typecheck",
     "format": "pnpm --dir infra format",
     "pr": "pnpm --dir infra pr",
     "proteger-branch": "pnpm --dir infra proteger-branch"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs}": [
+      "infra/node_modules/.bin/eslint --config eslint.config.js --fix",
+      "infra/node_modules/.bin/prettier --config infra/config/prettier.config.json --ignore-path infra/config/prettierignore --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "infra/node_modules/.bin/prettier --config infra/config/prettier.config.json --ignore-path infra/config/prettierignore --write"
+    ]
   }
 }
