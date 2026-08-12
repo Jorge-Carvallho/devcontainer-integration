@@ -35,7 +35,7 @@ Todos rodam **na raiz** do projeto. No **Dev Container**, as dependências insta
 | `pnpm lint` | Conferir qualidade do código (ESLint) |
 | `pnpm typecheck` | Conferir tipos TypeScript |
 | `pnpm format` | Padronizar formatação dos arquivos (Prettier) |
-| `pnpm pr` | Abrir Pull Request no GitHub (precisa do `gh` instalado) |
+| `pnpm pr` | Criar Pull Request no GitHub via **GitHub CLI** (`gh`) |
 
 **Fluxo usual:** `git add` → `pnpm commit` → push → `pnpm pr` (ou PR pelo site do GitHub).
 
@@ -140,8 +140,36 @@ test(checkout): INT-020 cobrir fluxo de pagamento
 ## Depois do commit
 
 1. Faça **push** da branch (se não fez no passo 6).
-2. Abra um **Pull Request** para a `main`.
-3. O **título do PR** também precisa da chave Jira (pode copiar a mensagem do commit).
+2. Abra um **Pull Request** para a `main` (veja abaixo).
+3. O **título do PR** precisa da chave Jira (ex.: `DCI-7 descricao curta`).
+
+---
+
+## Abrir Pull Request (`pnpm pr`)
+
+Forma **padrão** de abrir PR depois do push — usa o **GitHub CLI** (`gh`) no terminal.
+
+```bash
+pnpm pr
+```
+
+**O que faz:**
+
+- Cria um PR da **sua branch atual** → `main`
+- Inclui **todos os commits** da branch que ainda não estão na `main`
+- Preenche o **título** no padrão da empresa (`CHAVE` + descrição da branch)
+- **Não faz merge** — o PR fica **Open** até você clicar **Merge pull request** no GitHub
+
+**Antes de usar (só uma vez na máquina):**
+
+1. Ter o `gh` instalado — [cli.github.com](https://cli.github.com/)
+2. Rodar `gh auth login` e entrar na sua conta GitHub
+
+**Se já existir PR aberto** dessa branch, o `pnpm pr` só **ajusta o título** (não cria outro).
+
+**Alternativa:** ao final do `pnpm commit`, use o **link** “Abrir Pull Request” no terminal (abre o GitHub no navegador). Se a página der erro, use `pnpm pr`.
+
+**Cancelar um PR:** no GitHub, **Close pull request** (não confundir com Merge). Nada entra na `main` até você mergear.
 
 ---
 
@@ -153,6 +181,8 @@ test(checkout): INT-020 cobrir fluxo de pagamento
 | Branch sem chave Jira | Renomeie ou crie branch no padrão `tipo/CHAVE-descricao` |
 | Lint ou typecheck falhou | Corrija os erros no terminal e rode de novo |
 | PR rejeitado no CI | Coloque a chave Jira no **título** do PR |
+| Link do PR no navegador deu erro | Use `pnpm pr` no terminal |
+| `pnpm pr` não funciona | Instale o `gh` e rode `gh auth login` |
 
 ---
 
@@ -168,5 +198,5 @@ test(checkout): INT-020 cobrir fluxo de pagamento
 No corpo do commit ou comentário:
 
 ```text
-DCI-3 #comment ajuste feito #time 1h #close TESTE
+DCI-3 #comment ajuste feito #time 1h #close 
 ```
