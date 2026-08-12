@@ -21,10 +21,11 @@ A automação vive em **`infra/`** (scripts, configs, docs). A raiz é a área d
 
 ## Documentos
 
-| Documento                                    | Conteúdo                                                           |
-| -------------------------------------------- | ------------------------------------------------------------------ |
-| [`pipeline-devops.md`](./pipeline-devops.md) | Husky, Commitlint, lint-staged, `pnpm commit`, CI — fluxo completo |
-| [`devcontainer.md`](./devcontainer.md)       | Imagem, Node, portas, extensões, manutenção do `.devcontainer/`    |
+| Documento                                              | Conteúdo                                                           |
+| ------------------------------------------------------ | ------------------------------------------------------------------ |
+| [`arquitetura-e-fluxos.md`](./arquitetura-e-fluxos.md) | Arquitetura completa, fluxos, onboarding, troubleshooting, Ruleset |
+| [`pipeline-devops.md`](./pipeline-devops.md)           | Husky, Commitlint, lint-staged, `pnpm commit`, CI — fluxo completo |
+| [`devcontainer.md`](./devcontainer.md)                 | Imagem, Node, portas, extensões, manutenção do `.devcontainer/`    |
 
 ## Especificações oficiais (PDF)
 
