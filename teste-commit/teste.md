@@ -8,3 +8,4 @@ husky direto
 sem jira
 t16
 t16 done
+push-t17
