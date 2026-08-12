@@ -168,5 +168,5 @@ test(checkout): INT-020 cobrir fluxo de pagamento
 No corpo do commit ou comentário:
 
 ```text
-DCI-3 #comment ajuste feito #time 1h #close
+DCI-3 #comment ajuste feito #time 1h #close TESTE
 ```
