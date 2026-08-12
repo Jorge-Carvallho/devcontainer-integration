@@ -4,16 +4,17 @@
   //   false = mostra tudo
   // Depois: Ctrl+Shift+P → Developer: Reload Window
   "files.exclude": {
-    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/.gitignore,**/infra,**/.pnpm-store,package.json,pnpm-lock.yaml,devcontainer-integration.infra.code-workspace}": false,
+    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/.gitignore,**/infra,**/.pnpm-store,**/teste-commit,package.json,pnpm-lock.yaml,eslint.config.js,devcontainer-integration.infra.code-workspace}": false,
     "**/node_modules": true
   },
   "search.exclude": {
-    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/infra,**/.pnpm-store}/**": true,
+    "{**/.cursor,**/.devcontainer,**/.github,**/.husky,**/infra,**/.pnpm-store,**/teste-commit}/**": true,
     "**/.gitignore": true,
+    "**/eslint.config.js": true,
     "**/node_modules/**": true
   },
   "eslint.options": {
-    "overrideConfigFile": "infra/config/eslint.config.js"
+    "overrideConfigFile": "eslint.config.js"
   },
   "prettier.configPath": "infra/config/prettier.config.json",
   "prettier.ignorePath": "infra/config/prettierignore"
