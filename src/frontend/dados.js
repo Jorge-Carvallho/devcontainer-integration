@@ -14,6 +14,7 @@
  * @property {string} descricao
  * @property {StatusIntegracao} status
  * @property {number} itens
+ * @property {string} atualizado
  */
 
 /**
@@ -27,6 +28,7 @@ export function listarIntegracoes() {
       descricao: "Repositorio, branch e Pull Request.",
       status: "ok",
       itens: 12,
+      atualizado: "hoje",
     },
     {
       id: "jira",
@@ -34,6 +36,7 @@ export function listarIntegracoes() {
       descricao: "Cards e chave da tarefa no commit.",
       status: "pendente",
       itens: 5,
+      atualizado: "ontem",
     },
     {
       id: "ci",
@@ -41,6 +44,7 @@ export function listarIntegracoes() {
       descricao: "Check de validacao do Pull Request.",
       status: "ok",
       itens: 3,
+      atualizado: "hoje",
     },
     {
       id: "trello",
@@ -48,6 +52,15 @@ export function listarIntegracoes() {
       descricao: "Quadro do projeto (ainda nao ligado).",
       status: "falhou",
       itens: 0,
+      atualizado: "semana passada",
+    },
+    {
+      id: "slack",
+      nome: "Slack",
+      descricao: "Avisos de commit e Pull Request no canal do time.",
+      status: "pendente",
+      itens: 2,
+      atualizado: "hoje",
     },
   ];
 }

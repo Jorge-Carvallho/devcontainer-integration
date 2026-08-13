@@ -10,4 +10,4 @@ Abrir no navegador:
 src/frontend/index.html
 ```
 
-A tela mostra integracoes de exemplo (GitHub, Jira, CI/CD e Trello), com busca, filtro por situacao e um detalhe ao clicar no card.
+A tela mostra integracoes de exemplo (GitHub, Jira, CI/CD, Trello e Slack), com busca, filtro, botao para limpar e a data da ultima atualizacao no detalhe.

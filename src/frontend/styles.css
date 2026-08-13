@@ -34,13 +34,19 @@ label {
 }
 
 input,
-select {
+select,
+button {
   min-width: 220px;
   padding: 8px;
   border: 1px solid #334155;
   border-radius: 8px;
   background: #1e293b;
   color: inherit;
+}
+
+button {
+  align-self: end;
+  cursor: pointer;
 }
 
 .conteudo {

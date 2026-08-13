@@ -23,16 +23,18 @@ function filtroValido(valor) {
 export function iniciarPainel(raiz) {
   const busca = /** @type {HTMLInputElement | null} */ (raiz.querySelector("#busca"));
   const filtro = /** @type {HTMLSelectElement | null} */ (raiz.querySelector("#filtro"));
+  const limpar = /** @type {HTMLButtonElement | null} */ (raiz.querySelector("#limpar"));
   const lista = /** @type {HTMLElement | null} */ (raiz.querySelector("#lista"));
   const resumo = /** @type {HTMLElement | null} */ (raiz.querySelector("#resumo"));
   const detalhe = /** @type {HTMLElement | null} */ (raiz.querySelector("#detalhe"));
 
-  if (!busca || !filtro || !lista || !resumo || !detalhe) {
+  if (!busca || !filtro || !limpar || !lista || !resumo || !detalhe) {
     return;
   }
 
   const campoBusca = busca;
   const campoFiltro = filtro;
+  const botaoLimpar = limpar;
   const areaLista = lista;
   const areaResumo = resumo;
   const areaDetalhe = detalhe;
@@ -104,7 +106,10 @@ export function iniciarPainel(raiz) {
     const itens = document.createElement("p");
     itens.textContent = `Itens ligados: ${item.itens}`;
 
-    areaDetalhe.append(titulo, status, texto, itens);
+    const atualizado = document.createElement("p");
+    atualizado.textContent = `Ultima atualizacao: ${item.atualizado}`;
+
+    areaDetalhe.append(titulo, status, texto, itens, atualizado);
   }
 
   function atualizar() {
@@ -115,6 +120,11 @@ export function iniciarPainel(raiz) {
 
   campoBusca.addEventListener("input", atualizar);
   campoFiltro.addEventListener("change", atualizar);
+  botaoLimpar.addEventListener("click", () => {
+    campoBusca.value = "";
+    campoFiltro.value = "todos";
+    atualizar();
+  });
 
   areaLista.addEventListener("click", (evento) => {
     const alvo = /** @type {HTMLElement | null} */ (evento.target);
