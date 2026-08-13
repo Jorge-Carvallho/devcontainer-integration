@@ -227,25 +227,37 @@ Evitar na descrição: histórico de cada commit; testes temporários; arquivos 
 
 ### Comentários do PR
 
-Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico. Não reescrever a descrição.
+Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico do PR. Não reescrever a descrição.
+
+O comentário deve ser **detalhado o bastante** para qualquer pessoa entender: qual era a tarefa, o que mudou, o que isso faz na prática e como conferir. Não resumir em uma linha seca.
+
+Tamanho proporcional à mudança: pequena não vira romance; grande não fica em três bullets vazios. Sempre explicar.
 
 ```markdown
 ## Atualização
 
-Uma ou duas frases sobre este envio.
+O que esta tarefa/envio fez, em poucas frases claras.
 
-### Alterações deste envio
+## O que mudou
+
+Explique cada mudança com efeito + detalhe (arquivo só se ajudar).
 
 - ...
 
-### Status
+## Na prática
+
+O que a pessoa passa a ver ou conseguir fazer depois deste envio.
+
+## Como conferir
+
+Passos simples para validar esta mudança (não o PR inteiro).
+
+## Status
 
 - Commit: criado
 - Push: realizado
 - CI: aguardando
 ```
-
-Alteração pequena → comentário pequeno.
 
 **Extra:** card do Jira, só se for possível.
 
@@ -257,7 +269,8 @@ Alteração pequena → comentário pequeno.
 - Reescrever a descrição do PR com o histórico de um único commit.
 - Colocar na descrição arquivo/teste que já não existe na branch.
 - Inventar percentual ou benefício.
-- Texto longo demais para uma mudança pequena.
+- Comentário deste envio curto demais (só título, sem explicar a mudança e a tarefa).
+- Comentário deste envio que fala do PR inteiro ou de commits anteriores.
 - Usar na descrição: “Em uma frase”, “Onde mudou”, “Melhorias” genéricas, “Como conferir (sem ser dev)”.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
