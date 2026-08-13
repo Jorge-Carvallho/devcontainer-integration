@@ -1,5 +1,5 @@
 ---
-description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; comentário da tarefa no GitHub
+description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; erro explicado em linguagem simples; comentário no GitHub
 alwaysApply: true
 ---
 
@@ -23,12 +23,44 @@ Autorização é só frase explícita, por exemplo: "pode corrigir", "corrija es
 Se lint, typecheck ou outra validação falhar:
 
 1. Interromper o fluxo antes do commit.
-2. Identificar exatamente: arquivo; linha (quando houver); regra/erro; mensagem da ferramenta.
-3. Informar ao usuário de forma objetiva.
+2. Identificar **todos** os erros (não só o primeiro): arquivo; linha (quando houver); regra/erro; mensagem da ferramenta; trecho, se der.
+3. Explicar de forma **simples**, para qualquer pessoa entender — sem jargão, sem pedir “qual foi o erro”.
 4. **NÃO** alterar automaticamente o código que causou a falha.
 5. Aguardar autorização explícita para corrigir.
 
 Sem autorização, o agente só diagnostica.
+
+**Obrigatório no aviso ao usuário** (copiar este modelo; preencher com o caso real; nunca inventar):
+
+```markdown
+## O que aconteceu
+O envio parou. O commit NÃO foi criado.
+
+## Em linguagem simples
+... (o que deu errado, como se explicasse para quem não programa)
+
+## Onde
+- arquivo: ...
+- linha: ... (se a ferramenta mostrou)
+- trecho: ... (se der para citar)
+
+## O que a ferramenta disse
+- regra/erro: ...
+- mensagem original: ...
+
+## Possíveis causas
+- ...
+- ... (só o que fizer sentido neste caso; se não tiver certeza, diga isso)
+
+## O que NÃO foi feito
+Não alterei o código.
+
+## Próximo passo
+Se quiser que eu corrija, diga "pode corrigir".
+```
+
+Se houver mais de um erro, listar cada um no mesmo formato (Onde + ferramenta + linguagem simples).
+Não perguntar ao usuário qual foi o erro: o agente já deve ter lido a saída da ferramenta e traduzido.
 
 Depois da correção autorizada:
 
@@ -125,3 +157,4 @@ Não enviar direto para a main.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
 - Mudar regra/configuração só para a validação passar.
+- Avisar só “deu erro” sem explicar em linguagem simples (arquivo, o que significa, possíveis causas).
