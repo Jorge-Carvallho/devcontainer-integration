@@ -9,6 +9,12 @@ aplica lint, formatacao e typecheck tambem fora de `infra/`.
 node src/index.js
 ```
 
+Frontend de teste (abrir no navegador):
+
+```bash
+src/frontend/index.html
+```
+
 ## Qualidade
 
 Com arquivos em staging, `pnpm commit` e o Husky `pre-commit` devem executar

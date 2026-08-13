@@ -29,4 +29,13 @@ export default [
       eqeqeq: ["error", "smart"],
     },
   },
+  {
+    files: ["src/frontend/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+      },
+    },
+  },
 ];

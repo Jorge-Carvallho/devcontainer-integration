@@ -1,5 +1,5 @@
 ---
-description: Finalizar tarefa com pnpm commit / pnpm pr e deixar o comentário da tarefa no GitHub
+description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; comentário da tarefa no GitHub
 alwaysApply: true
 ---
 
@@ -10,6 +10,41 @@ O agente é o **operador**. As ferramentas da plataforma são a **validação**.
 Usar: `pnpm commit`, `pnpm pr`, Husky, Commitlint, lint-staged, typecheck, Actions, Ruleset.
 
 Não mergear a menos que o usuário peça explicitamente ("faça o merge").
+
+## Validar vs alterar
+
+Validar código ≠ alterar código.
+
+O agente pode executar lint, typecheck e outras validações. **Não corrige sozinho** falha de lint/typecheck: pode ser código fora da tarefa, de outra pessoa, ou decisão intencional.
+
+**"Finalize a tarefa" NÃO é autorização para corrigir lint/typecheck.**
+Autorização é só frase explícita, por exemplo: "pode corrigir", "corrija esse erro", "resolva o lint", "pode ajustar".
+
+Se lint, typecheck ou outra validação falhar:
+
+1. Interromper o fluxo antes do commit.
+2. Identificar exatamente: arquivo; linha (quando houver); regra/erro; mensagem da ferramenta.
+3. Informar ao usuário de forma objetiva.
+4. **NÃO** alterar automaticamente o código que causou a falha.
+5. Aguardar autorização explícita para corrigir.
+
+Sem autorização, o agente só diagnostica.
+
+Depois da correção autorizada:
+
+1. Executar de novo a validação que falhou.
+2. Se passar, continuar o fluxo.
+3. Se surgir outro erro, interromper de novo e informar.
+
+Correção automática **permitida**:
+- autofix já executado por lint-staged / ESLint `--fix` / Prettier `--write`, conforme a configuração existente do repositório
+
+Correção automática **proibida** sem autorização:
+- alterar lógica
+- refatorar código
+- corrigir typecheck
+- modificar código de outro contexto
+- mudar regra/configuração para a validação passar
 
 ## Ordem 1 — finalizar (SEM merge)
 
@@ -88,3 +123,5 @@ Não enviar direto para a main.
 - PR no GitHub sem esse comentário (body vazio).
 - Inventar percentual.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
+- Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
+- Mudar regra/configuração só para a validação passar.
