@@ -1,0 +1,231 @@
+---
+description: Finalizar tarefa com pnpm commit / pnpm pr; texto do nano vai para o PR; validar sem corrigir sozinho
+alwaysApply: true
+---
+
+# Fluxo de desenvolvimento automatizado
+
+O agente é o **operador**. As ferramentas da plataforma são a **validação**.
+
+Usar: `pnpm commit`, `pnpm pr`, Husky, Commitlint, lint-staged, typecheck, Actions, Ruleset.
+
+Não mergear a menos que o usuário peça explicitamente ("faça o merge").
+
+## Autorização para finalizar a tarefa
+
+Quando o usuário disser algo como:
+
+- "finalize essa tarefa"
+- "finalize a tarefa"
+- "prepare para PR"
+- "suba essa alteração"
+- "finalize essa alteração"
+
+isso já autoriza o fluxo operacional completo:
+
+1. analisar as alterações;
+2. preparar o staging dos arquivos da tarefa;
+3. executar `pnpm commit` (título curto + detalhes no nano);
+4. fazer o push da branch;
+5. executar `pnpm pr`;
+6. colocar **o mesmo texto do nano** no Pull Request;
+7. verificar o status do CI.
+
+Não pedir uma segunda confirmação para commit, push, PR ou publicação do texto.
+
+Não usar frases como: "diga run", "clique em Run", "se este texto estiver ok, confirme o envio", "posso fazer o push?", "quer que eu envie?".
+
+A autorização para finalizar **NÃO** inclui:
+
+- corrigir lint ou typecheck;
+- alterar lógica para a validação passar;
+- push direto para `main`;
+- force push;
+- merge.
+
+Essas ações seguem as regras específicas abaixo.
+
+### Comunicação durante a finalização
+
+Não interromper o fluxo para mostrar o texto antes de gravar.
+
+Depois de concluir, apresentar ao usuário um resumo simples do que realmente aconteceu.
+
+Se alguma etapa falhar, parar naquele ponto e explicar o problema.
+
+## Validar vs alterar
+
+Validar código ≠ alterar código.
+
+O agente pode executar lint, typecheck e outras validações. **Não corrige sozinho** falha de lint/typecheck: pode ser código fora da tarefa, de outra pessoa, ou decisão intencional.
+
+**"Finalize a tarefa" NÃO é autorização para corrigir lint/typecheck.**
+Autorização é só frase explícita, por exemplo: "pode corrigir", "corrija esse erro", "resolva o lint", "pode ajustar".
+
+Se lint, typecheck ou outra validação falhar:
+
+1. Interromper o fluxo antes do commit.
+2. Identificar **todos** os erros (não só o primeiro): arquivo; linha (quando houver); regra/erro; mensagem da ferramenta; trecho, se der.
+3. Explicar de forma **simples**, para qualquer pessoa entender — sem jargão, sem pedir “qual foi o erro”.
+4. **NÃO** alterar automaticamente o código que causou a falha.
+5. Aguardar autorização explícita para corrigir.
+
+Sem autorização, o agente só diagnostica.
+
+**Obrigatório no aviso ao usuário** (copiar este modelo; preencher com o caso real; nunca inventar):
+
+```markdown
+## O que aconteceu
+O envio parou. O commit NÃO foi criado.
+
+## Em linguagem simples
+... (o que deu errado, como se explicasse para quem não programa)
+
+## Onde
+- arquivo: ...
+- linha: ... (se a ferramenta mostrou)
+- trecho: ... (se der para citar)
+
+## O que a ferramenta disse
+- regra/erro: ...
+- mensagem original: ...
+
+## Possíveis causas
+- ...
+- ... (só o que fizer sentido neste caso; se não tiver certeza, diga isso)
+
+## O que NÃO foi feito
+Não alterei o código.
+
+## Próximo passo
+Se quiser que eu corrija, diga "pode corrigir".
+```
+
+Se houver mais de um erro, listar cada um no mesmo formato (Onde + ferramenta + linguagem simples).
+Não perguntar ao usuário qual foi o erro: o agente já deve ter lido a saída da ferramenta e traduzido.
+
+Depois da correção autorizada:
+
+1. Executar de novo a validação que falhou.
+2. Se passar, continuar o fluxo.
+3. Se surgir outro erro, interromper de novo e informar.
+
+Correção automática **permitida**:
+- autofix já executado por lint-staged / ESLint `--fix` / Prettier `--write`, conforme a configuração existente do repositório
+
+Correção automática **proibida** sem autorização:
+- alterar lógica
+- refatorar código
+- corrigir typecheck
+- modificar código de outro contexto
+- mudar regra/configuração para a validação passar
+
+## Um texto só: o nano serve para o PR
+
+No `pnpm commit` existem duas partes. Não inventar um terceiro texto.
+
+1. **Título** (uma linha, curta): `tipo(escopo): JIRA-KEY descrição`
+   Exemplo: `feat(frontend): DCI-10 painel base simples`
+2. **Detalhes** (nano): texto grande que explica **o que esta tarefa implementou**. Simples e detalhado. Escrito para quem **não é dev** também entender.
+
+O texto do nano é a fonte. O Pull Request usa **esse mesmo texto**. Sem reescrever. Sem comparar a branch com a `main`. Sem resumir commits antigos. Sem contar a história da branch.
+
+- Sempre responder **Sim** em "Adicionar detalhes (corpo do commit)?".
+- Nunca deixar o nano vazio.
+- PR novo: descrição do PR = texto do nano. `gh pr edit --body` com o corpo do commit (`git log -1 --format=%b`).
+- PR já aberto: comentário = texto do nano **deste** envio. `gh pr comment --body` com o mesmo corpo. Não reescrever a descrição.
+
+```bash
+gh pr edit --body "$(git log -1 --format=%b)"
+```
+
+```bash
+gh pr comment --body "$(git log -1 --format=%b)"
+```
+
+### O que escrever no nano
+
+Fiel ao que entrou **neste** commit. Sem jargão. Sem percentual inventado. Sem narrar tentativa e erro.
+
+Escrever como se explicasse para alguém que não programa: o que mudou, o que a pessoa passa a ver ou conseguir fazer, e como conferir. Simples de ler, mas completo — não uma linha seca.
+
+```markdown
+## O que foi feito
+
+O que esta tarefa implementou, em frases claras.
+
+## Alterações
+
+- ...
+- ...
+
+## Na prática
+
+O que a pessoa passa a ver ou conseguir fazer.
+
+## Como conferir
+
+Passos simples para validar esta mudança.
+```
+
+Tamanho proporcional: mudança pequena não vira romance; mudança grande não fica em bullets vazios.
+
+## Ordem 1 — finalizar (SEM merge)
+
+1. Conferir Git, branch e Jira Key (`[A-Z]{2,10}-[0-9]+`). Sem chave: parar. Não usar `main`.
+2. Staging só do que é da tarefa. Sem `teste-commit/`, `.env`, secrets.
+3. Escrever o texto do nano com o que **este** commit fez. Não mostrar antes para aprovação.
+4. `pnpm commit`: título curto + detalhes no nano + push, se a ferramenta perguntar.
+5. `pnpm pr` (título com Jira Key). Publicar o **mesmo texto do nano** no PR (descrição se for novo; comentário se já existir).
+6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o texto.
+7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** no mesmo formato da ferramenta (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`):
+
+```text
+Issue no Jira:
+https://<jira>/browse/CHAVE-123
+
+Branch no GitHub:
+https://github.com/<org>/<repo>/tree/<branch-url-encoded>
+
+Abrir Pull Request (titulo padrao ja preenchido):
+https://github.com/<org>/<repo>/compare/main...<branch-url-encoded>?expand=1&title=<titulo-encoded>
+```
+
+Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branch atual. Título do compare: `montarTituloPrSugerido` (ex.: `DCI-9 TesteRegrasCursor`).
+8. Informar o check `Validar commits e PR` e o que falta no DoD, no formato:
+
+```markdown
+## Tarefa finalizada
+
+- Commit criado.
+- Push realizado.
+- Pull Request atualizado.
+- Texto do nano publicado no PR.
+- Check `Validar commits e PR`: aguardando.
+
+### O que foi feito
+...
+
+### O que mudou na prática
+...
+
+### Links
+- Jira: ...
+- Branch: ...
+- Pull Request: ...
+```
+
+## Proibido
+
+- Pedir `run` / segunda confirmação depois de "finalize a tarefa".
+- Interromper o fluxo só para mostrar o texto antes de gravar.
+- Deixar o nano vazio, ou o PR novo sem o texto do nano.
+- Inventar um texto diferente para o PR.
+- Comparar a branch com a `main` para escrever a descrição.
+- Resumir commits antigos, a história da branch ou o PR inteiro no texto deste envio.
+- Inventar percentual ou benefício.
+- `git commit` / `--no-verify` / push na `main` / merge implícito.
+- Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
+- Mudar regra/configuração só para a validação passar.
+- Avisar só “deu erro” sem explicar em linguagem simples (arquivo, o que significa, possíveis causas).
+- Texto que não corresponde ao que entrou neste commit.
