@@ -1,0 +1,90 @@
+---
+description: Finalizar tarefa com pnpm commit / pnpm pr e deixar o comentário da tarefa no GitHub
+alwaysApply: true
+---
+
+# Fluxo de desenvolvimento automatizado
+
+O agente é o **operador**. As ferramentas da plataforma são a **validação**.
+
+Usar: `pnpm commit`, `pnpm pr`, Husky, Commitlint, lint-staged, typecheck, Actions, Ruleset.
+
+Não mergear a menos que o usuário peça explicitamente ("faça o merge").
+
+## Ordem 1 — finalizar (SEM merge)
+
+1. Conferir Git, branch e Jira Key (`[A-Z]{2,10}-[0-9]+`). Sem chave: parar. Não usar `main`.
+2. Staging só do que é da tarefa. Sem `teste-commit/`, `.env`, secrets.
+3. Montar o **comentário da tarefa** (modelo abaixo).
+4. `pnpm commit`.
+5. `pnpm pr` (título com Jira Key). O body vem vazio — **obrigatório** gravar o comentário **no GitHub** (Pull Request):
+
+```bash
+gh pr edit --body "$(cat <<'EOF'
+...modelo...
+EOF
+)"
+```
+
+Esse texto fica no PR. É o lugar correto do comentário da tarefa.
+
+6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o comentário.
+7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** no mesmo formato da ferramenta (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`):
+
+```text
+Issue no Jira:
+https://<jira>/browse/CHAVE-123
+
+Branch no GitHub:
+https://github.com/<org>/<repo>/tree/<branch-url-encoded>
+
+Abrir Pull Request (titulo padrao ja preenchido):
+https://github.com/<org>/<repo>/compare/main...<branch-url-encoded>?expand=1&title=<titulo-encoded>
+```
+
+Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branch atual. Título do compare: `montarTituloPrSugerido` (ex.: `DCI-9 TesteRegrasCursor`).
+8. Informar também o check `Validar commits e PR` e o que falta no DoD.
+
+## Comentário da tarefa (GitHub PR)
+
+Português simples. Sem jargão. Para qualquer pessoa entender o que mudou e como fechar o fluxo.
+
+```markdown
+## Em uma frase
+...
+
+## O que estava acontecendo
+...
+
+## O que foi feito
+1. ...
+
+## Onde mudou
+- área/arquivo em linguagem comum → o que mudou
+
+## Melhorias
+- o que ficou melhor
+- percentual só se for real
+- se não der para medir: "Não mensurável. Melhoria: ..."
+- nunca inventar número
+
+## Como conferir (sem ser dev)
+1. ...
+
+## O que não foi feito
+...
+
+## Como finalizar
+1. Esperar o check "Validar commits e PR" ficar verde
+2. Clicar em Merge pull request
+Não enviar direto para a main.
+```
+
+**Onde fica:** descrição/comentário do **Pull Request no GitHub**.  
+**Extra:** card do Jira, só se for possível.
+
+## Proibido
+
+- PR no GitHub sem esse comentário (body vazio).
+- Inventar percentual.
+- `git commit` / `--no-verify` / push na `main` / merge implícito.
