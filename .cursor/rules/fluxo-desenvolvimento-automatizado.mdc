@@ -1,5 +1,5 @@
 ---
-description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; erro explicado em linguagem simples; comentário no GitHub
+description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; resumo natural da alteração no PR
 alwaysApply: true
 ---
 
@@ -10,6 +10,51 @@ O agente é o **operador**. As ferramentas da plataforma são a **validação**.
 Usar: `pnpm commit`, `pnpm pr`, Husky, Commitlint, lint-staged, typecheck, Actions, Ruleset.
 
 Não mergear a menos que o usuário peça explicitamente ("faça o merge").
+
+## Autorização para finalizar a tarefa
+
+Quando o usuário disser algo como:
+
+- "finalize essa tarefa"
+- "finalize a tarefa"
+- "prepare para PR"
+- "suba essa alteração"
+- "finalize essa alteração"
+
+isso já autoriza o fluxo operacional completo:
+
+1. analisar as alterações;
+2. preparar o staging dos arquivos da tarefa;
+3. executar `pnpm commit`;
+4. fazer o push da branch;
+5. executar `pnpm pr`;
+6. criar ou atualizar o Pull Request;
+7. publicar o resumo da alteração no Pull Request;
+8. verificar o status do CI.
+
+Não pedir uma segunda confirmação para commit, push, PR ou publicação do resumo.
+
+Não usar frases como: "diga run", "clique em Run", "se este texto estiver ok, confirme o envio", "posso fazer o push?", "quer que eu envie?".
+
+A autorização para finalizar **NÃO** inclui:
+
+- corrigir lint ou typecheck;
+- alterar lógica para a validação passar;
+- push direto para `main`;
+- force push;
+- merge.
+
+Essas ações seguem as regras específicas abaixo.
+
+### Comunicação durante a finalização
+
+Não interromper o fluxo para mostrar previamente o texto que vai no PR.
+
+Gerar o resumo com base no diff real do envio e publicá-lo automaticamente.
+
+Depois de concluir, apresentar ao usuário um resumo simples do que realmente aconteceu.
+
+Se alguma etapa falhar, parar naquele ponto e explicar o problema.
 
 ## Validar vs alterar
 
@@ -82,16 +127,16 @@ Correção automática **proibida** sem autorização:
 
 1. Conferir Git, branch e Jira Key (`[A-Z]{2,10}-[0-9]+`). Sem chave: parar. Não usar `main`.
 2. Staging só do que é da tarefa. Sem `teste-commit/`, `.env`, secrets.
-3. Montar o **comentário da tarefa** (modelo abaixo).
-4. `pnpm commit`.
-5. `pnpm pr` (título com Jira Key). Gravar o comentário **desta finalização** no GitHub:
+3. Montar o **resumo da alteração** (estrutura abaixo; texto natural, fiel a este commit). Não mostrar esse texto antes para aprovação.
+4. `pnpm commit` (inclui push, se a ferramenta perguntar).
+5. `pnpm pr` (título com Jira Key). Publicar o resumo **desta finalização** no GitHub, sem segunda confirmação:
 
-- **PR novo:** `gh pr edit --body` com o modelo abaixo.
+- **PR novo:** `gh pr edit --body` com o resumo.
 - **PR que já existe:** **não** reescrever a descrição inteira. Publicar **só este envio** com `gh pr comment`:
 
 ```bash
 gh pr comment --body "$(cat <<'EOF'
-...modelo...
+...resumo deste envio...
 EOF
 )"
 ```
@@ -114,54 +159,151 @@ https://github.com/<org>/<repo>/compare/main...<branch-url-encoded>?expand=1&tit
 ```
 
 Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branch atual. Título do compare: `montarTituloPrSugerido` (ex.: `DCI-9 TesteRegrasCursor`).
-8. Informar também o check `Validar commits e PR` e o que falta no DoD.
-
-## Comentário da tarefa (GitHub PR)
-
-Português simples. Sem jargão. Para qualquer pessoa entender o que mudou **nesta vez**.
-
-Fiel ao diff deste envio. Proibido: reaproveitar o comentário anterior; misturar o histórico da branch; falar de regra/fluxo/CI se o commit não mexeu nisso.
+8. Informar o check `Validar commits e PR` e o que falta no DoD, no formato:
 
 ```markdown
-## Em uma frase
+## Tarefa finalizada
+
+- Commit criado.
+- Push realizado.
+- Pull Request atualizado.
+- Resumo da alteração publicado no PR.
+- Check `Validar commits e PR`: aguardando.
+
+### O que foi feito
 ...
 
-## O que estava acontecendo
+### O que mudou na prática
 ...
 
-## O que foi feito
-1. ...
-
-## Onde mudou
-- área/arquivo em linguagem comum → o que mudou
-
-## Melhorias
-- o que ficou melhor
-- percentual só se for real
-- se não der para medir: "Não mensurável. Melhoria: ..."
-- nunca inventar número
-
-## Como conferir (sem ser dev)
-1. ...
-
-## O que não foi feito
-...
-
-## Como finalizar
-1. Esperar o check "Validar commits e PR" ficar verde
-2. Clicar em Merge pull request
-Não enviar direto para a main.
+### Links
+- Jira: ...
+- Branch: ...
+- Pull Request: ...
 ```
 
-**Onde fica:** PR novo → descrição do Pull Request. PR já aberto → comentário novo neste PR (`gh pr comment`).  
+## Resumo da alteração no Pull Request
+
+Explicar de forma simples o que foi feito **neste envio**, para alguém que não precisa conhecer o código.
+
+Basear o texto somente em: alterações deste commit; arquivos realmente enviados; resultado real das validações.
+
+Não reutilizar texto anterior. Não descrever commits antigos. Não inventar melhorias, números ou resultados.
+
+Usar a estrutura como **referência**. Escrever como um desenvolvedor explicando o próprio trabalho, não como relatório automático.
+
+Adapte o tamanho à mudança: alteração pequena → resumo pequeno. Não gerar texto longo para uma linha.
+
+### Estilo
+
+- Português simples. Efeito primeiro, detalhe técnico depois.
+- Evitar jargão; se usar termo técnico, explicar rápido o que é.
+- Traduzir nomes técnicos quando possível; manter o arquivo quando for útil.
+- Não escrever só o caminho (`infra/config/tsconfig.json` → alterado).
+- Preferir: `infra/config/tsconfig.json` — ajustado para incluir os arquivos da aplicação na verificação de tipos.
+- Ou, se o caminho não importar: a configuração de TypeScript passou a verificar também o código da aplicação.
+- Não usar frases genéricas (“foram feitas melhorias”). Dizer exatamente o que mudou. Não exagerar benefícios.
+- Não obrigar todas as seções. Omitir o que não agrega (ex.: não inventar “Melhorias” para apagar uma pasta).
+- Não usar “Em uma frase”, “Onde mudou”, “Melhorias”, “O que estava acontecendo” como seções fixas.
+
+### Estrutura de referência
+
+```text
+O que foi feito
+        ↓
+O que mudou na prática
+        ↓
+Resultado
+        ↓
+Como conferir
+        ↓
+O que ficou de fora   ← só se for relevante; senão omitir
+        ↓
+Situação do envio
+        ↓
+Próximo passo
+```
+
+### Modelo
+
+```markdown
+## O que foi feito
+
+Explique em poucas frases o objetivo desta alteração.
+
+## O que mudou na prática
+
+Explique o efeito, não só o caminho do arquivo.
+
+- Fluxo de commit (`infra/scripts/commit.mjs`) — ...
+- Configuração do projeto — ...
+
+## Resultado
+
+O que passou a funcionar (ou o que foi removido) de verdade.
+Percentual só se for medido. Nunca inventar número.
+
+## Como conferir
+
+Passos simples para outra pessoa verificar.
+Se não houver conferência manual: a validação desta alteração é feita automaticamente pelo fluxo do projeto.
+
+## O que ficou de fora
+
+Só se existir algo relevante que não entrou neste envio. Senão, omitir.
+
+## Situação do envio
+
+- Commit criado: sim/não
+- Push realizado: sim/não
+- Pull Request: criado/atualizado
+- Check `Validar commits e PR`: aguardando/aprovado/falhou
+
+Não afirmar que o CI passou sem verificar.
+
+## Próximo passo
+
+Aguardar o check `Validar commits e PR` ficar verde.
+Depois, se as regras do Pull Request estiverem atendidas, o merge poderá ser realizado.
+Não enviar alterações diretamente para a `main`.
+```
+
+Exemplo de alteração pequena (omitir o que não agrega):
+
+```markdown
+## O que foi feito
+
+Foi removida a pasta antiga de testes manuais que não faz mais parte do projeto.
+
+## O que mudou na prática
+
+- A pasta `teste-commit/` foi removida.
+- Nenhuma configuração da aplicação foi alterada.
+
+## Situação do envio
+
+- Commit criado: sim
+- Push realizado: sim
+- Pull Request: atualizado
+- Check `Validar commits e PR`: aguardando
+
+## Próximo passo
+
+Aguardar a validação do GitHub.
+```
+
+**Onde fica:** PR novo → descrição do Pull Request. PR já aberto → comentário novo neste PR (`gh pr comment`). Publicar junto com a finalização, sem pedir `run`.  
 **Extra:** card do Jira, só se for possível.
 
 ## Proibido
 
-- PR no GitHub sem esse comentário (body vazio).
-- Inventar percentual.
+- Pedir `run` / segunda confirmação depois de "finalize a tarefa".
+- Interromper o fluxo só para mostrar o texto do PR antes de publicar.
+- PR no GitHub sem o resumo desta alteração (body vazio no PR novo; envio seguinte sem `gh pr comment`).
+- Inventar percentual ou benefício.
+- Texto longo demais para uma mudança pequena.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
 - Mudar regra/configuração só para a validação passar.
 - Avisar só “deu erro” sem explicar em linguagem simples (arquivo, o que significa, possíveis causas).
-- Comentário da tarefa que não corresponde ao que foi enviado nesta finalização.
+- Resumo que não corresponde ao que foi enviado nesta finalização.
