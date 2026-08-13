@@ -178,9 +178,12 @@ Tamanho proporcional: mudança pequena não vira romance; mudança grande não f
 4. `pnpm commit`: título curto + detalhes no nano + push, se a ferramenta perguntar.
 5. `pnpm pr` (título com Jira Key). Publicar o **mesmo texto do nano** no PR (descrição se for novo; comentário se já existir).
 6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o texto.
-7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** no mesmo formato da ferramenta (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`):
+7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** iguais ao terminal (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`).
 
-```text
+Copiar o mesmo bloco. Cada URL numa linha própria, completa, para o chat deixar **clicável** (como o terminal).
+
+Não colocar os links dentro de bloco de código (```), lista markdown, nem `<>`. Não usar `/pull/123` nem `#13` — o chat encurta e some a URL. O terceiro link é sempre o `compare/...` da ferramenta.
+
 Issue no Jira:
 https://<jira>/browse/CHAVE-123
 
@@ -189,10 +192,9 @@ https://github.com/<org>/<repo>/tree/<branch-url-encoded>
 
 Abrir Pull Request (titulo padrao ja preenchido):
 https://github.com/<org>/<repo>/compare/main...<branch-url-encoded>?expand=1&title=<titulo-encoded>
-```
 
 Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branch atual. Título do compare: `montarTituloPrSugerido` (ex.: `DCI-9 TesteRegrasCursor`).
-8. Informar o check `Validar commits e PR` e o que falta no DoD, no formato:
+8. Informar o check `Validar commits e PR` e o que falta no DoD. Os links deste resumo são **os mesmos 3 do passo 7**, no mesmo formato clicável. Não inventar outro bloco de links.
 
 ```markdown
 ## Tarefa finalizada
@@ -209,10 +211,14 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 ### O que mudou na prática
 ...
 
-### Links
-- Jira: ...
-- Branch: ...
-- Pull Request: ...
+Issue no Jira:
+https://<jira>/browse/CHAVE-123
+
+Branch no GitHub:
+https://github.com/<org>/<repo>/tree/<branch-url-encoded>
+
+Abrir Pull Request (titulo padrao ja preenchido):
+https://github.com/<org>/<repo>/compare/main...<branch-url-encoded>?expand=1&title=<titulo-encoded>
 ```
 
 ## Proibido
@@ -229,3 +235,6 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 - Mudar regra/configuração só para a validação passar.
 - Avisar só “deu erro” sem explicar em linguagem simples (arquivo, o que significa, possíveis causas).
 - Texto que não corresponde ao que entrou neste commit.
+- Esquecer os 3 links, ou devolver formato diferente do terminal.
+- Colocar os links em bloco de código (```) — deixa de ser clicável.
+- Trocar o terceiro link por `/pull/123` ou `#13`.
