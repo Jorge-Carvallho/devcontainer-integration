@@ -18,22 +18,36 @@ function filtroValido(valor) {
 }
 
 /**
+ * @param {ReturnType<typeof listarIntegracoes>} lista
+ * @param {string} modo
+ */
+function ordenarLista(lista, modo) {
+  const copia = [...lista];
+  if (modo === "nome") {
+    copia.sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+  }
+  return copia;
+}
+
+/**
  * @param {Element} raiz
  */
 export function iniciarPainel(raiz) {
   const busca = /** @type {HTMLInputElement | null} */ (raiz.querySelector("#busca"));
   const filtro = /** @type {HTMLSelectElement | null} */ (raiz.querySelector("#filtro"));
   const limpar = /** @type {HTMLButtonElement | null} */ (raiz.querySelector("#limpar"));
+  const ordenar = /** @type {HTMLSelectElement | null} */ (raiz.querySelector("#ordenar"));
   const lista = /** @type {HTMLElement | null} */ (raiz.querySelector("#lista"));
   const resumo = /** @type {HTMLElement | null} */ (raiz.querySelector("#resumo"));
   const detalhe = /** @type {HTMLElement | null} */ (raiz.querySelector("#detalhe"));
 
-  if (!busca || !filtro || !limpar || !lista || !resumo || !detalhe) {
+  if (!busca || !filtro || !limpar || !ordenar || !lista || !resumo || !detalhe) {
     return;
   }
 
   const campoBusca = busca;
   const campoFiltro = filtro;
+  const campoOrdenar = ordenar;
   const botaoLimpar = limpar;
   const areaLista = lista;
   const areaResumo = resumo;
@@ -43,12 +57,18 @@ export function iniciarPainel(raiz) {
   let selecionado = "";
 
   function estadoAtual() {
-    return filtrarIntegracoes(integracoes, campoBusca.value, filtroValido(campoFiltro.value));
+    const filtradas = filtrarIntegracoes(
+      integracoes,
+      campoBusca.value,
+      filtroValido(campoFiltro.value),
+    );
+    return ordenarLista(filtradas, campoOrdenar.value);
   }
 
   function desenharResumo() {
-    const contagem = contarPorStatus(integracoes);
-    areaResumo.textContent = `${contagem.total} integracoes · ${contagem.ok} em ordem · ${contagem.pendente} aguardando · ${contagem.falhou} com problema`;
+    const visiveis = estadoAtual();
+    const contagem = contarPorStatus(visiveis);
+    areaResumo.textContent = `${contagem.total} visiveis · ${contagem.ok} em ordem · ${contagem.pendente} aguardando · ${contagem.falhou} com problema`;
   }
 
   function desenharLista() {
@@ -120,9 +140,11 @@ export function iniciarPainel(raiz) {
 
   campoBusca.addEventListener("input", atualizar);
   campoFiltro.addEventListener("change", atualizar);
+  campoOrdenar.addEventListener("change", atualizar);
   botaoLimpar.addEventListener("click", () => {
     campoBusca.value = "";
     campoFiltro.value = "todos";
+    campoOrdenar.value = "padrao";
     atualizar();
   });
 

@@ -62,6 +62,14 @@ export function listarIntegracoes() {
       itens: 2,
       atualizado: "hoje",
     },
+    {
+      id: "email",
+      nome: "E-mail",
+      descricao: "Aviso por e-mail quando o check do Pull Request termina.",
+      status: "ok",
+      itens: 4,
+      atualizado: "hoje",
+    },
   ];
 }
 

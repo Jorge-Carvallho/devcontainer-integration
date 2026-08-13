@@ -10,4 +10,4 @@ Abrir no navegador:
 src/frontend/index.html
 ```
 
-A tela mostra integracoes de exemplo (GitHub, Jira, CI/CD, Trello e Slack), com busca, filtro, botao para limpar e a data da ultima atualizacao no detalhe.
+A tela mostra integracoes de exemplo (incluindo e-mail), com busca, filtro, ordenacao A-Z, botao para limpar e contagem so do que esta visivel.
