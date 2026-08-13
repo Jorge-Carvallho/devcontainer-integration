@@ -129,20 +129,17 @@ Correção automática **proibida** sem autorização:
 2. Staging só do que é da tarefa. Sem `teste-commit/`, `.env`, secrets.
 3. Montar o **resumo da alteração** (estrutura abaixo; texto natural, fiel a este commit). Não mostrar esse texto antes para aprovação.
 4. `pnpm commit` (inclui push, se a ferramenta perguntar).
-5. `pnpm pr` (título com Jira Key). Publicar o resumo **desta finalização** no GitHub, sem segunda confirmação:
+5. `pnpm pr` (título com Jira Key). Há **duas** peças de texto no GitHub:
 
-- **PR novo:** `gh pr edit --body` com o resumo.
-- **PR que já existe:** **não** reescrever a descrição inteira. Publicar **só este envio** com `gh pr comment`:
+- **Descrição do PR** (body): objetivo geral da branch, estado **atual** contra `main`. Só no PR novo, ou se o objetivo geral mudou. `gh pr edit --body`.
+- **Comentário** (envio seguinte): só o que entrou **neste** commit. `gh pr comment`. **Não** reescrever a descrição com o histórico do commit.
 
 ```bash
 gh pr comment --body "$(cat <<'EOF'
-...resumo deste envio...
+...atualizacao deste envio...
 EOF
 )"
 ```
-
-O texto tem que bater com **o que entrou neste commit** (arquivos staged / o que acabou de ser enviado).  
-Se a pessoa só apagou uma pasta, o comentário fala **só disso**. Não copiar o texto antigo do PR nem listar trabalho de commits anteriores.
 
 6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o comentário.
 7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** no mesmo formato da ferramenta (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`):
@@ -182,126 +179,86 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 - Pull Request: ...
 ```
 
-## Resumo da alteração no Pull Request
+## Descrição e comentários do Pull Request
 
-Explicar de forma simples o que foi feito **neste envio**, para alguém que não precisa conhecer o código.
-
-Basear o texto somente em: alterações deste commit; arquivos realmente enviados; resultado real das validações.
-
-Não reutilizar texto anterior. Não descrever commits antigos. Não inventar melhorias, números ou resultados.
-
-Usar a estrutura como **referência**. Escrever como um desenvolvedor explicando o próprio trabalho, não como relatório automático.
-
-Adapte o tamanho à mudança: alteração pequena → resumo pequeno. Não gerar texto longo para uma linha.
-
-### Estilo
-
-- Português simples. Efeito primeiro, detalhe técnico depois.
-- Evitar jargão; se usar termo técnico, explicar rápido o que é.
-- Traduzir nomes técnicos quando possível; manter o arquivo quando for útil.
-- Não escrever só o caminho (`infra/config/tsconfig.json` → alterado).
-- Preferir: `infra/config/tsconfig.json` — ajustado para incluir os arquivos da aplicação na verificação de tipos.
-- Ou, se o caminho não importar: a configuração de TypeScript passou a verificar também o código da aplicação.
-- Não usar frases genéricas (“foram feitas melhorias”). Dizer exatamente o que mudou. Não exagerar benefícios.
-- Não obrigar todas as seções. Omitir o que não agrega (ex.: não inventar “Melhorias” para apagar uma pasta).
-- Não usar “Em uma frase”, “Onde mudou”, “Melhorias”, “O que estava acontecendo” como seções fixas.
-
-### Estrutura de referência
+São duas coisas diferentes.
 
 ```text
-O que foi feito
-        ↓
-O que mudou na prática
-        ↓
-Resultado
-        ↓
-Como conferir
-        ↓
-O que ficou de fora   ← só se for relevante; senão omitir
-        ↓
-Situação do envio
-        ↓
-Próximo passo
+DESCRIÇÃO DO PR  = resumo geral da finalidade (estado atual da branch)
+COMENTÁRIOS      = o que entrou neste envio/commit
 ```
 
-### Modelo
+Português simples. Efeito primeiro. Sem relatório automático. Sem percentual inventado. Sem narrar tentativa e erro.
+
+### Regra de conteúdo atual (descrição)
+
+Antes de escrever ou atualizar a descrição:
+
+1. analisar o diff completo da branch contra `main`;
+2. analisar os commits atuais;
+3. descrever somente o que **ainda existe** no estado final da branch.
+
+Arquivo criado no teste e depois removido **não** entra como alteração principal. A descrição é o resultado atual, não o histórico.
+
+### Descrição do PR
+
+Curta, organizada. Só: Resumo → Principais alterações → Validações → Resultado.
 
 ```markdown
-## O que foi feito
+## Resumo
 
-Explique em poucas frases o objetivo desta alteração.
+Objetivo geral deste Pull Request, em poucas frases.
 
-## O que mudou na prática
+## Principais alterações
 
-Explique o efeito, não só o caminho do arquivo.
+- mudança principal
+- mudança principal
 
-- Fluxo de commit (`infra/scripts/commit.mjs`) — ...
-- Configuração do projeto — ...
+## Validações
+
+- validações relevantes executadas ou preservadas
 
 ## Resultado
 
-O que passou a funcionar (ou o que foi removido) de verdade.
-Percentual só se for medido. Nunca inventar número.
-
-## Como conferir
-
-Passos simples para outra pessoa verificar.
-Se não houver conferência manual: a validação desta alteração é feita automaticamente pelo fluxo do projeto.
-
-## O que ficou de fora
-
-Só se existir algo relevante que não entrou neste envio. Senão, omitir.
-
-## Situação do envio
-
-- Commit criado: sim/não
-- Push realizado: sim/não
-- Pull Request: criado/atualizado
-- Check `Validar commits e PR`: aguardando/aprovado/falhou
-
-Não afirmar que o CI passou sem verificar.
-
-## Próximo passo
-
-Aguardar o check `Validar commits e PR` ficar verde.
-Depois, se as regras do Pull Request estiverem atendidas, o merge poderá ser realizado.
-Não enviar alterações diretamente para a `main`.
+O que ficou disponível ou melhor depois desta implementação.
 ```
 
-Exemplo de alteração pequena (omitir o que não agrega):
+Evitar na descrição: histórico de cada commit; testes temporários; arquivos que já não existem; “Em uma frase”; “Onde mudou”; “Melhorias” genéricas; percentual sem medição; “clique em Merge”; texto sobre o que já foi desfeito.
+
+### Comentários do PR
+
+Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico. Não reescrever a descrição.
 
 ```markdown
-## O que foi feito
+## Atualização
 
-Foi removida a pasta antiga de testes manuais que não faz mais parte do projeto.
+Uma ou duas frases sobre este envio.
 
-## O que mudou na prática
+### Alterações deste envio
 
-- A pasta `teste-commit/` foi removida.
-- Nenhuma configuração da aplicação foi alterada.
+- ...
 
-## Situação do envio
+### Status
 
-- Commit criado: sim
-- Push realizado: sim
-- Pull Request: atualizado
-- Check `Validar commits e PR`: aguardando
-
-## Próximo passo
-
-Aguardar a validação do GitHub.
+- Commit: criado
+- Push: realizado
+- CI: aguardando
 ```
 
-**Onde fica:** PR novo → descrição do Pull Request. PR já aberto → comentário novo neste PR (`gh pr comment`). Publicar junto com a finalização, sem pedir `run`.  
+Alteração pequena → comentário pequeno.
+
 **Extra:** card do Jira, só se for possível.
 
 ## Proibido
 
 - Pedir `run` / segunda confirmação depois de "finalize a tarefa".
 - Interromper o fluxo só para mostrar o texto do PR antes de publicar.
-- PR no GitHub sem o resumo desta alteração (body vazio no PR novo; envio seguinte sem `gh pr comment`).
+- PR novo com descrição vazia, ou envio seguinte sem comentário deste commit.
+- Reescrever a descrição do PR com o histórico de um único commit.
+- Colocar na descrição arquivo/teste que já não existe na branch.
 - Inventar percentual ou benefício.
 - Texto longo demais para uma mudança pequena.
+- Usar na descrição: “Em uma frase”, “Onde mudou”, “Melhorias” genéricas, “Como conferir (sem ser dev)”.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
 - Mudar regra/configuração só para a validação passar.
