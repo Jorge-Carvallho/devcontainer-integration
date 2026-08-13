@@ -1,5 +1,5 @@
 ---
-description: Finalizar tarefa com pnpm commit / pnpm pr; validar sem corrigir sozinho; resumo natural da alteração no PR
+description: Finalizar tarefa com pnpm commit / pnpm pr; texto do nano vai para o PR; validar sem corrigir sozinho
 alwaysApply: true
 ---
 
@@ -25,14 +25,13 @@ isso já autoriza o fluxo operacional completo:
 
 1. analisar as alterações;
 2. preparar o staging dos arquivos da tarefa;
-3. executar `pnpm commit`;
+3. executar `pnpm commit` (título curto + detalhes no nano);
 4. fazer o push da branch;
 5. executar `pnpm pr`;
-6. criar ou atualizar o Pull Request;
-7. publicar o resumo da alteração no Pull Request;
-8. verificar o status do CI.
+6. colocar **o mesmo texto do nano** no Pull Request;
+7. verificar o status do CI.
 
-Não pedir uma segunda confirmação para commit, push, PR ou publicação do resumo.
+Não pedir uma segunda confirmação para commit, push, PR ou publicação do texto.
 
 Não usar frases como: "diga run", "clique em Run", "se este texto estiver ok, confirme o envio", "posso fazer o push?", "quer que eu envie?".
 
@@ -48,9 +47,7 @@ Essas ações seguem as regras específicas abaixo.
 
 ### Comunicação durante a finalização
 
-Não interromper o fluxo para mostrar previamente o texto que vai no PR.
-
-Gerar o resumo com base no diff real do envio e publicá-lo automaticamente.
+Não interromper o fluxo para mostrar o texto antes de gravar.
 
 Depois de concluir, apresentar ao usuário um resumo simples do que realmente aconteceu.
 
@@ -123,25 +120,64 @@ Correção automática **proibida** sem autorização:
 - modificar código de outro contexto
 - mudar regra/configuração para a validação passar
 
+## Um texto só: o nano serve para o PR
+
+No `pnpm commit` existem duas partes. Não inventar um terceiro texto.
+
+1. **Título** (uma linha, curta): `tipo(escopo): JIRA-KEY descrição`
+   Exemplo: `feat(frontend): DCI-10 painel base simples`
+2. **Detalhes** (nano): texto grande que explica **o que esta tarefa implementou**. Simples e detalhado. Escrito para quem **não é dev** também entender.
+
+O texto do nano é a fonte. O Pull Request usa **esse mesmo texto**. Sem reescrever. Sem comparar a branch com a `main`. Sem resumir commits antigos. Sem contar a história da branch.
+
+- Sempre responder **Sim** em "Adicionar detalhes (corpo do commit)?".
+- Nunca deixar o nano vazio.
+- PR novo: descrição do PR = texto do nano. `gh pr edit --body` com o corpo do commit (`git log -1 --format=%b`).
+- PR já aberto: comentário = texto do nano **deste** envio. `gh pr comment --body` com o mesmo corpo. Não reescrever a descrição.
+
+```bash
+gh pr edit --body "$(git log -1 --format=%b)"
+```
+
+```bash
+gh pr comment --body "$(git log -1 --format=%b)"
+```
+
+### O que escrever no nano
+
+Fiel ao que entrou **neste** commit. Sem jargão. Sem percentual inventado. Sem narrar tentativa e erro.
+
+Escrever como se explicasse para alguém que não programa: o que mudou, o que a pessoa passa a ver ou conseguir fazer, e como conferir. Simples de ler, mas completo — não uma linha seca.
+
+```markdown
+## O que foi feito
+
+O que esta tarefa implementou, em frases claras.
+
+## Alterações
+
+- ...
+- ...
+
+## Na prática
+
+O que a pessoa passa a ver ou conseguir fazer.
+
+## Como conferir
+
+Passos simples para validar esta mudança.
+```
+
+Tamanho proporcional: mudança pequena não vira romance; mudança grande não fica em bullets vazios.
+
 ## Ordem 1 — finalizar (SEM merge)
 
 1. Conferir Git, branch e Jira Key (`[A-Z]{2,10}-[0-9]+`). Sem chave: parar. Não usar `main`.
 2. Staging só do que é da tarefa. Sem `teste-commit/`, `.env`, secrets.
-3. Montar o **resumo da alteração** (estrutura abaixo; texto natural, fiel a este commit). Não mostrar esse texto antes para aprovação.
-4. `pnpm commit` (inclui push, se a ferramenta perguntar).
-5. `pnpm pr` (título com Jira Key). Há **duas** peças de texto no GitHub:
-
-- **Descrição do PR** (body): objetivo geral da branch, estado **atual** contra `main`. Só no PR novo, ou se o objetivo geral mudou. `gh pr edit --body`.
-- **Comentário** (envio seguinte): só o que entrou **neste** commit. `gh pr comment`. **Não** reescrever a descrição com o histórico do commit.
-
-```bash
-gh pr comment --body "$(cat <<'EOF'
-...atualizacao deste envio...
-EOF
-)"
-```
-
-6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o comentário.
+3. Escrever o texto do nano com o que **este** commit fez. Não mostrar antes para aprovação.
+4. `pnpm commit`: título curto + detalhes no nano + push, se a ferramenta perguntar.
+5. `pnpm pr` (título com Jira Key). Publicar o **mesmo texto do nano** no PR (descrição se for novo; comentário se já existir).
+6. **Opcional — Jira:** se der, também envia o mesmo texto para a card (`CHAVE #comment ...` no detalhe do commit, ou MCP Jira). Se não der, não bloquear: o GitHub já tem o texto.
 7. Depois do push (pelo `pnpm commit` ou `git push`), **obrigatório** devolver os **3 links** no mesmo formato da ferramenta (`mostrarLinksAposPush` em `infra/scripts/commit.mjs`):
 
 ```text
@@ -164,7 +200,7 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 - Commit criado.
 - Push realizado.
 - Pull Request atualizado.
-- Resumo da alteração publicado no PR.
+- Texto do nano publicado no PR.
 - Check `Validar commits e PR`: aguardando.
 
 ### O que foi feito
@@ -179,108 +215,17 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 - Pull Request: ...
 ```
 
-## Diferença entre commit, descrição do PR e comentário do PR
-
-São **três** coisas diferentes. Português simples. Sem percentual inventado. Sem narrar tentativa e erro.
-
-### Commit
-
-Registra **uma** alteração específica. Curto e objetivo. **Não** usar o commit para explicar o Pull Request inteiro.
-
-Formato: `tipo(escopo): JIRA-KEY descrição curta`
-
-Exemplo: `feat(cursor): DCI-9 automatizar finalizacao da tarefa`
-
-### Descrição do Pull Request
-
-Representa o **resultado completo e atual** da branch em relação à `main`. Resume o que **permanece** no estado final. Não narra cada commit. Não registra testes temporários que já foram removidos.
-
-### Comentário do Pull Request
-
-Só uma **atualização posterior** dentro de um PR já aberto. Não substitui a descrição. Não copia a descrição inteira.
-
-### Regra de conteúdo atual (descrição)
-
-Antes de escrever ou atualizar a descrição:
-
-1. analisar o diff completo da branch contra `main`;
-2. analisar os commits atuais;
-3. descrever somente o que **ainda existe** no estado final da branch.
-
-Arquivo criado no teste e depois removido **não** entra como alteração principal. A descrição é o resultado atual, não o histórico.
-
-### Descrição do PR
-
-Curta, organizada. Só: Resumo → Principais alterações → Validações → Resultado.
-
-```markdown
-## Resumo
-
-Objetivo geral deste Pull Request, em poucas frases.
-
-## Principais alterações
-
-- mudança principal
-- mudança principal
-
-## Validações
-
-- validações relevantes executadas ou preservadas
-
-## Resultado
-
-O que ficou disponível ou melhor depois desta implementação.
-```
-
-Evitar na descrição: histórico de cada commit; testes temporários; arquivos que já não existem; “Em uma frase”; “Onde mudou”; “Melhorias” genéricas; percentual sem medição; “clique em Merge”; texto sobre o que já foi desfeito.
-
-### Comentários do PR
-
-Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico. Não reescrever a descrição.
-
-Detalhado o bastante para qualquer pessoa entender a tarefa e a mudança. Não uma linha seca. Tamanho proporcional: pequena não vira romance; grande não fica em bullets vazios.
-
-```markdown
-## Atualização
-
-O que esta tarefa/envio fez, em frases claras.
-
-## Alterações deste envio
-
-- ...
-- ...
-
-## Na prática
-
-O que a pessoa passa a ver ou conseguir fazer depois deste envio.
-
-## Como conferir
-
-Passos simples para validar **esta** mudança (não o PR inteiro).
-
-## Status
-
-- Commit: criado
-- Push: realizado
-- CI: aguardando
-```
-
-**Extra:** card do Jira, só se for possível.
-
 ## Proibido
 
 - Pedir `run` / segunda confirmação depois de "finalize a tarefa".
-- Interromper o fluxo só para mostrar o texto do PR antes de publicar.
-- PR novo com descrição vazia, ou envio seguinte sem comentário deste commit.
-- Reescrever a descrição do PR com o histórico de um único commit.
-- Colocar na descrição arquivo/teste que já não existe na branch.
+- Interromper o fluxo só para mostrar o texto antes de gravar.
+- Deixar o nano vazio, ou o PR novo sem o texto do nano.
+- Inventar um texto diferente para o PR.
+- Comparar a branch com a `main` para escrever a descrição.
+- Resumir commits antigos, a história da branch ou o PR inteiro no texto deste envio.
 - Inventar percentual ou benefício.
-- Comentário deste envio curto demais (só título, sem explicar a mudança e a tarefa).
-- Comentário deste envio que fala do PR inteiro, copia a descrição ou mistura commits anteriores.
-- Usar a mensagem de commit para explicar o Pull Request inteiro.
-- Usar na descrição: “Em uma frase”, “Onde mudou”, “Melhorias” genéricas, “Como conferir (sem ser dev)”.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
 - Mudar regra/configuração só para a validação passar.
 - Avisar só “deu erro” sem explicar em linguagem simples (arquivo, o que significa, possíveis causas).
-- Resumo que não corresponde ao que foi enviado nesta finalização.
+- Texto que não corresponde ao que entrou neste commit.
