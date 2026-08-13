@@ -179,16 +179,25 @@ Montar a partir de `infra/config/jira.json` (`baseUrl`), remote `origin` e branc
 - Pull Request: ...
 ```
 
-## Descrição e comentários do Pull Request
+## Diferença entre commit, descrição do PR e comentário do PR
 
-São duas coisas diferentes.
+São **três** coisas diferentes. Português simples. Sem percentual inventado. Sem narrar tentativa e erro.
 
-```text
-DESCRIÇÃO DO PR  = resumo geral da finalidade (estado atual da branch)
-COMENTÁRIOS      = o que entrou neste envio/commit
-```
+### Commit
 
-Português simples. Efeito primeiro. Sem relatório automático. Sem percentual inventado. Sem narrar tentativa e erro.
+Registra **uma** alteração específica. Curto e objetivo. **Não** usar o commit para explicar o Pull Request inteiro.
+
+Formato: `tipo(escopo): JIRA-KEY descrição curta`
+
+Exemplo: `feat(cursor): DCI-9 automatizar finalizacao da tarefa`
+
+### Descrição do Pull Request
+
+Representa o **resultado completo e atual** da branch em relação à `main`. Resume o que **permanece** no estado final. Não narra cada commit. Não registra testes temporários que já foram removidos.
+
+### Comentário do Pull Request
+
+Só uma **atualização posterior** dentro de um PR já aberto. Não substitui a descrição. Não copia a descrição inteira.
 
 ### Regra de conteúdo atual (descrição)
 
@@ -227,21 +236,18 @@ Evitar na descrição: histórico de cada commit; testes temporários; arquivos 
 
 ### Comentários do PR
 
-Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico do PR. Não reescrever a descrição.
+Cada envio seguinte: um comentário **só daquele commit**. Não repetir o histórico. Não reescrever a descrição.
 
-O comentário deve ser **detalhado o bastante** para qualquer pessoa entender: qual era a tarefa, o que mudou, o que isso faz na prática e como conferir. Não resumir em uma linha seca.
-
-Tamanho proporcional à mudança: pequena não vira romance; grande não fica em três bullets vazios. Sempre explicar.
+Detalhado o bastante para qualquer pessoa entender a tarefa e a mudança. Não uma linha seca. Tamanho proporcional: pequena não vira romance; grande não fica em bullets vazios.
 
 ```markdown
 ## Atualização
 
-O que esta tarefa/envio fez, em poucas frases claras.
+O que esta tarefa/envio fez, em frases claras.
 
-## O que mudou
+## Alterações deste envio
 
-Explique cada mudança com efeito + detalhe (arquivo só se ajudar).
-
+- ...
 - ...
 
 ## Na prática
@@ -250,7 +256,7 @@ O que a pessoa passa a ver ou conseguir fazer depois deste envio.
 
 ## Como conferir
 
-Passos simples para validar esta mudança (não o PR inteiro).
+Passos simples para validar **esta** mudança (não o PR inteiro).
 
 ## Status
 
@@ -270,7 +276,8 @@ Passos simples para validar esta mudança (não o PR inteiro).
 - Colocar na descrição arquivo/teste que já não existe na branch.
 - Inventar percentual ou benefício.
 - Comentário deste envio curto demais (só título, sem explicar a mudança e a tarefa).
-- Comentário deste envio que fala do PR inteiro ou de commits anteriores.
+- Comentário deste envio que fala do PR inteiro, copia a descrição ou mistura commits anteriores.
+- Usar a mensagem de commit para explicar o Pull Request inteiro.
 - Usar na descrição: “Em uma frase”, “Onde mudou”, “Melhorias” genéricas, “Como conferir (sem ser dev)”.
 - `git commit` / `--no-verify` / push na `main` / merge implícito.
 - Corrigir lint, typecheck ou lógica sem autorização explícita (pedido de finalizar não conta).
