@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel de integracoes</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app" class="layout">
+      <header>
+        <h1>Painel de integracoes</h1>
+        <p id="resumo">Carregando...</p>
+      </header>
+
+      <section class="controles">
+        <label>
+          Buscar
+          <input id="busca" type="search" placeholder="Nome ou descricao" />
+        </label>
+        <label>
+          Situacao
+          <select id="filtro">
+            <option value="todos">Todas</option>
+            <option value="ok">Em ordem</option>
+            <option value="pendente">Aguardando</option>
+            <option value="falhou">Com problema</option>
+          </select>
+        </label>
+      </section>
+
+      <div class="conteudo">
+        <section id="lista" class="lista" aria-label="Lista de integracoes"></section>
+        <aside id="detalhe" class="detalhe">Selecione uma integracao para ver o detalhe.</aside>
+      </div>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
